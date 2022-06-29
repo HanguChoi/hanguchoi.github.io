@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>Noah's Ark - Taxonomic Rank Explorer</title>
+        <meta charset="utf-8" >
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="main.css" >
+    </head>
+    <body>
+        <div id="wrapper">
+            <div id="overlay">
+                <p>loading ...</p>
+            </div>
+            <div id="outer">
+                <header>
+                    <div class="search-wrap fl">
+                        <div class="logo">
+                            <p>Noah's</p>
+                            <p>Ark</p>
+                        </div>
+                        <input type="search" id="search" placeholder="Type name. (e.g. tiger)"/>
+                        <button id="remove-cache-btn" class="setting">
+                            <p>Remove</p>
+                            <p>Cache</p>
+                        </button>
+                        <ul id="suggest-container">
+
+                        </ul>
+                    </div>
+                    <nav>
+                        <ul id="above-ranks">
+
+                        </ul>
+                    </nav>
+                    <div class="whitespace">
+                        <div>
+                            <p>
+                                Taxonomic Rank is the relative level of a group of organisms (a taxon) in a taxonomic hierarchy. 
+                            </p>
+                            <p>
+                                https://en.wikipedia.org/wiki/Taxonomic_rank
+                            </p>
+                        </div>
+                    </div>
+                </header>
+                <div id="inner">
+                    <main>
+                        <div class="detail-wrap">
+                            <div id="detail">
+                            </div>
+                            <ul id="detail-images" class="child-images">
+                            </ul>
+                        </div>
+                        <h4>immediate children</h4>
+                        <ul id="result-container">
+
+                        </ul>
+                        <div class="control">
+                            <button id="more-btn">
+                                more
+                            </button>
+                        </div>
+                    </main>
+                    <footer>
+                        <p class="app-name">Noah's Ark - Taxonomic Rank Explorer</p>
+                        <p>A Project for Javascript Programming Course at Conestoga College</p>
+                        <p class="desc">API from GBIF https://www.gbif.org/developer/summary</p>
+                        <p class="desc">Copyright &copy; 2022 Hangu Choi</p>
+                    </footer>
+                </div>
+                
+            </div>
+            
+        </div>
+        <script src="main.js" ></script>
+    </body>    
+</html>

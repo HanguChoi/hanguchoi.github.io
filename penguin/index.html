@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="penguin.css">
+        <script type="module" src="penguin.js"></script>
+    </head>
+    <body>
+        <div id="world">
+            <div class="fl energy-container">
+                <p>Flying Energy</p>
+                <progress id="flying-energy-bar" value="0" max="1000">what</progress>
+            </div>
+            <div class="fl score-container">
+                <p>Score:</p>
+                <div id="score"></div>
+            </div>
+            <div id="gameover">
+                GAME OVER
+            </div>
+            <div id="penguin">
+                <img id="penguin-img" src="images/penguin1.png">
+                <img id="wing" src="images/wing.png">
+                <img id="paresuit" src="https://www.nicepng.com/png/detail/58-585707_parachute-clipart-cartoon-parachute-png.png">
+                <img id="backpack" src="images/backpack.png" width="120px;">
+            </div>
+            <div id="maps">
+                <div class="map">
+                    <img class="map-background" src="images/map1.png">
+                </div>
+                <div class="map">
+                    <img class="map-background" src="images/map1.png">
+                </div>
+            </div>
+        </div>
+        <div class="fl">
+            <div class="high-score-container fl jc-fs">
+                <button id="reset-top-ranked">Reset</button>    
+                <div id="high-score">
+                </div>
+            </div>
+            <div>
+                <p class="sm">Spacebar - Jump</p>
+                <p class="sm">Spacebar while jumping - Fly</p>
+                <p class="sm">Spacebar while flying - Stop Flying</p>
+            </div>
+        </div>
+        
+        
+        
+        <footer>
+            <p class="desc">Made for my nephew Ayden, Inspired by <a href="https://trex-runner.com" target="_blank">Google Dinosaur_Game</a> </p>
+        </footer>
+    </body>
+
+</html>

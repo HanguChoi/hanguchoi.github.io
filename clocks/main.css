@@ -1,0 +1,259 @@
+:root {
+  --color-blue: #00b7ff;
+}
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border: none;
+  font-family: roboto, Arial, sans-serif;
+}
+body {
+    background-image: url("background_mobile.jpg");
+    background-position: top center;
+    background-repeat: no-repeat;
+}
+#wrapper {
+    padding: 50px 4vw;
+}
+header, main {
+    max-width: 420px;
+}
+.fl {
+    display: flex;
+    justify-content: space-between;
+}
+button {
+    cursor: pointer;
+}
+
+nav ul {
+  display: flex;
+  list-style-type: none;
+  justify-content: flex-start;
+  background-color: #e9e9e9;
+  padding: 10px 2vw 0 4vw;
+  border-radius: 8px 8px 0px 0px;
+}
+nav ul li {
+  padding: 6px 0;
+  margin-right: 2px;
+  border-radius: 8px 8px 0px 0px;
+  background-color: #e9e9e9;
+}
+nav ul li.active {
+  background-color: #fff;
+}
+nav li.active a, nav li.active + li a {
+  border-left: none;
+}
+nav ul a {
+  display: inline-block;
+  padding: 4px 20px;
+  color: #333;
+  text-decoration: none;
+  border-left: 1px solid gray;
+  font-size: .9em;
+}
+nav ul li:first-child a {
+  border-left: none;    
+}
+
+.tab {
+  background-color: #fff;
+  padding: 10px;
+  border-radius: 0px 0px 8px 8px;
+  display: none;
+}
+.tab > div {
+    margin: 20px 0;
+}
+
+
+.time-view div {
+    display: flex;
+    flex-direction: column;
+}
+
+.time-view p {
+    font-size: 3em;    
+}
+.time-view label {
+    font-size: 0.8em;    
+    text-align: center;
+    color: var(--color-blue);
+}
+
+
+#clock .am-pm-elm {
+    display: none;
+}
+#clock .am-pm {
+    text-transform: uppercase;
+}
+#clock.h24 .time-view p {
+    font-size: 4em;    
+}
+
+.control button {
+    width: 60px;
+    height: 60px;
+    font-size: 0.9em;
+    border-radius: 30px;
+    color: #fff;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+.control button.green {
+    background-color: #026102;
+    color: #00fd00;
+}
+.control button.red {
+    background-color: #6d0808;
+    color: #ff6060;
+}
+.control button.gray {
+    background-color: #9a9a9a;
+    color: white;
+}
+.control button.disabled {
+    background-color: #dedede;
+    color: #f3f3f3;
+}
+
+
+#marks {
+    display: flex;
+    flex-direction: column;
+    max-height: 150px;
+    overflow: scroll;
+}
+.mark {
+    border-bottom: 1px solid #ddd;
+    padding: 5px 0;
+}
+.mark:first-child {
+    color: var(--color-blue);
+}
+
+#countdown .control > div {
+    margin: 10px 0;
+}
+#countdown .sample-button {
+    width: 44px;
+    height: 44px;
+    font-size: 0.8em;
+    color: #fff;
+    font-weight: 500;
+    text-transform: none;
+    background-color: #00b7ff69;
+    
+}
+#countdown .samples > div:first-child{
+    margin-bottom: 4px;
+}
+#countdown .sample-button.active {
+    box-shadow: inset 2px 2px 2px #807e7e;
+    border: 1px solid #807e7e;
+    font-weight: 600;
+    background-color: #00b7ffb3;
+}
+#countdown input {
+    border: 1px solid var(--color-blue);
+    border-radius: 4px;
+    padding: 2px;
+    font-size: 1.1em;
+    width: 100%;
+}
+#countdown .sample {
+    position: relative;
+    background-position: center center; 
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 180px;
+    display: none;
+}
+#countdown .sample.active {
+    display: block;
+}
+
+#countdown .sample p {
+    color: #fff;
+    position: absolute;
+    top: 60%;
+    left: 10%;
+    width: 60%;
+    font-size: 1.4em;
+    font-weight: 500;
+}
+
+#countdown .sample.christmas {
+    background-image: url(https://cdn.shopify.com/s/files/1/1199/7260/t/7/assets/christmas-eve-images.jpg);
+}
+
+#countdown .sample.victoria {
+    background-image: url(http://time.astrosage.com/images/festival/canada/happy-victoria-day.jpg);
+    box-shadow: inset 0 0 0 2000px rgb(51 51 51 / 40%);
+}
+
+#countdown .sample.newyear {
+    background-image: url("https://www.tripsavvy.com/thmb/yLLA-L53F7_SqpAnbv01gUERs9c=/950x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/GettyImages-500128888-5a395f2722fa3a003692b5f4.jpg");
+    box-shadow: inset 0 0 0 2000px rgb(51 51 51 / 50%);
+}
+#countdown #timezone {
+    border: 1px solid var(--color-blue);
+    width: 70%;
+    border-radius: 4px;
+    padding: 2px;
+    font-size: 1.1em;
+}
+#countdown .error {
+    color: #c50404;
+    display: none;
+}
+
+#countdown .error {
+    color: #c50404;
+    display: none;
+}
+footer {
+    color: #fff;
+    padding-top: 20px;
+}
+
+
+
+@media all and (min-width: 768px){
+    body {
+        /*
+          image source: https://wallpapercave.com/wp/wp4679485.jpg
+        */
+        background-image: url(background_desktop.jpg);
+    }
+    #wrapper {
+        padding: 50px 20vw;
+    }
+    header, main {
+        max-width: 500px;
+    }   
+    .tab {
+        padding: 10px 40px;
+    }
+    nav ul {
+      padding: 10px 0 0 50px;
+    }
+    .time-view p {
+        font-size: 3.8em;
+    }
+    .time-view label {
+        font-size: 1.2em;    
+    }
+    #clock.h24 .time-view p {
+        font-size: 4.8em;    
+    }
+    #countdown .sample {
+        height: 240px;
+    }
+}
+    
+    

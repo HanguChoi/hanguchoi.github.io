@@ -1,1 +1,2 @@
-# hanguchoi.github.io
+# jp_texa_data
+Javascript final project 

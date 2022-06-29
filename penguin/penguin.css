@@ -1,0 +1,190 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: monospace;
+    font-size: 1.2rem;
+}
+.fl {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.fl.jc-fs {
+    justify-content: flex-start;
+}
+.sm{
+    font-size: 0.8rem;
+}
+#world {
+    position: relative;
+    height: 500px;
+    overflow: hidden;
+    padding: 0 10px;
+}
+#penguin {
+    z-index: 555;
+    position: absolute;
+    width: 60px;
+    height: 100px;
+    bottom: 52px;
+    left: 100px;
+    border-radius: 20px;
+    color: white;
+    text-align: center;
+}
+#penguin.flying {
+    transform: rotate(70deg);
+}
+#penguin-img {
+    width: 100%;
+}
+#paresuit  {
+    display: none;
+    position: absolute;
+    left: -69px;
+    top: -83px;
+    transform: rotate(-29deg);
+    width: 100px;
+}
+#wing {
+    display:none;
+    position: absolute;
+    width: 70px;
+    transform: rotate(-62deg);
+    left: -70px;
+    top: 6px;
+}
+#penguin.flying #wing {
+    display: block;
+}
+#wing.flap_up {
+    transform: rotate(-30deg);
+    left: -68px;
+    top: -14px;
+}
+#backpack  {
+    position: absolute;
+    width: 120px;
+    left: -41px;
+    top: -19px;
+}
+
+#maps {
+    height: 400px;
+    display: flex;
+    overflow: hidden;
+    position: absolute;
+    left: 0px;
+    top: 68px;
+}
+
+.map {
+    position: relative;
+    overflow: hidden;
+    width: 500px;
+}
+
+.map-background {
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+}
+
+.obstacle {
+    z-index: 555;
+    width: 50px;
+    height: 60px;
+    bottom: 32px;
+    position: absolute;
+}
+.obstacle > svg  {
+    width: 100%;
+    height: 100%;
+    fill: #00e2ff;
+}
+.obstacle.sm {
+    
+}
+.obstacle.big {
+    
+}
+.obstacle.none {
+    display: none;
+}
+
+
+.energy-container {
+    position: absolute;
+    right: 300px;
+    top: 20px;
+}
+.score-container {
+    position: absolute;
+    right: 100px;
+    top: 20px;
+}
+#flying-energy-bar {
+    display: block;
+    border-radius: 1px;
+    width: 30vw;
+    height: 23px;
+    box-shadow: 2px 1px 2px EFEFEF;
+    color: #00e2ff;
+}
+.energy-container > p {
+    padding-right: 10px;
+}
+progress {
+    background-color: #EFEFEF;
+}
+progress::-webkit-progress-bar {
+    background-color: #EFEFEF;   
+}
+progress::-webkit-progress-value {
+    background-color: currentColor;   
+}
+progress::-moz-progress-bar {
+    background-color: currentColor;   
+}
+#score {
+    width: 100px;
+    text-align: center;
+    border: none;
+    /* border: 2px solid #007eff;
+    border-radius: 5px; */
+    
+}
+.high-score-container {
+    padding: 8px 20px;
+}
+#reset-top-ranked {
+    /* background-color: #fff; */
+    border: 1px solid gray;
+    margin-right: 20px;
+    padding: 4px;
+    border-radius: 4px;
+}
+.player {
+    display: inline-block;
+    padding-right: 15px;
+}
+#gameover {
+    display: none;
+    font-family: monospace;
+    width: 200px;
+    height: 50px;
+    text-align: center;
+    line-height: 50px;
+    font-size: 2.2em;
+    position: absolute;
+    margin: 0 auto;
+    left: calc(50% - 100px);
+    top: 150px;
+    z-index: 999;
+}
+footer {
+    background-color: #e4e4e4;
+    margin-top: 10px;
+    padding: 4px 20px;
+    font-size: .9rem;
+}
