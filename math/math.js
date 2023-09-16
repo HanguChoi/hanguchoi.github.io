@@ -36,8 +36,8 @@ const wrongAnswer = () => {
   showResult(THE_ANSWER_IS.INCORRECT);
 }
 const newQuestions = () => {
-  _numberA.innerText = getRandomInt(30);
-  _numberB.innerText = getRandomInt(30);
+  _numberA.innerText = getRandomInt(9);
+  _numberB.innerText = getRandomInt(9);
 }
 const getRandomInt = (max) => {
   return Math.floor(Math.random() * max);
