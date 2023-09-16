@@ -1,0 +1,31 @@
+
+:root {
+    --color-black: #111111;
+    --color-gray: #dadada;
+    --header-row-height-px: 40px;  /* This value is used in main.js */
+}
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    border: none;
+    font-family: Roboto, Arial, sans-serif;
+}
+.fl{
+    display: flex;
+    justify-content: space-between;
+}
+.b-sdw {
+    box-shadow: 1px 2px 2px var(--color-gray);
+}
+li {
+    list-style-type: none;
+}
+button {
+    cursor: pointer;
+}
+h4 {
+    text-transform: uppercase;
+    font-size: 0.8em;
+    padding: 10px 0 4px 4px;
+}
