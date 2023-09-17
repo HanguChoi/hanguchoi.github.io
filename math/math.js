@@ -61,6 +61,7 @@ const startGame = () => {
   newQuestions();
   RankManager.showTopRanks();
   Countdown.startCountdown(params.get("time"), onFinished);
+  _answer.focus();
 }
 const renderScore = () => {
   _score.innerText = score;

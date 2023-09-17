@@ -2,6 +2,7 @@ const _countdown = document.querySelector("#countdown .sec");
 
 let countdown;
 let timeRemaining = null;
+const defaultTimeRemaining = 300;
 let onFinished;
 
 const COUNTDOWN_STATUS = {
@@ -9,16 +10,6 @@ const COUNTDOWN_STATUS = {
   NOT_STARTED: 'not_started'
 };
 let countdownStatus = COUNTDOWN_STATUS.NOT_STARTED;
-let sampled = false;
-
-
-// const formatDate = (date) => {
-//     const y = date.getFullYear();
-//     const m = (date.getMonth() + 1).toString();
-//     const d = date.getDate().toString();
-//     const timestr = date.toTimeString().substr(0,5);
-//     return `${y}-${padding(m)}-${padding(d)}T${timestr}`;
-// }
 
 const setCountdown = () => {
   clearInterval(countdown);
@@ -26,7 +17,7 @@ const setCountdown = () => {
 }
 
 const startCountdown = (time, callback) => {
-  timeRemaining = time ? time : 10;
+  timeRemaining = time ? time : defaultTimeRemaining;
   onFinished = callback;
   clearInterval(countdown);
   renderCountdown();
