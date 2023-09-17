@@ -6,27 +6,59 @@
     <script type="module" src="math.js"></script>
   </head>
   <body>
-    <div id="container">
-      <h2>Level 1</h2>
-      <div class="fl jc-fs number-box">
-        <div id="number_a"></div>
-        <div>+</div>
-        <div id="number_b"></div>
-        <div>=</div>
+    <div id="container" class="fl">
+      <div id="gameover">
+        <p>GAME OVER</p>
         <div>
-          <input type="text" id="answer" placeholder=""/>
-        </div>
-        <div>
-          <button id="submit">Submit</button>
+          <button id="restart">
+            Restart
+          </button>
         </div>
       </div>
-      <div class="fl jc-c notice-wrap">
-        <div id="notice" ></div>
-      </div>
+      <main>
+        <h2>Level 1</h2>
+        <div class="fl jc-fs number-box">
+          <div id="number_a"></div>
+          <div>+</div>
+          <div id="number_b"></div>
+          <div>=</div>
+          <div>
+            <input type="text" id="answer" placeholder=""/>
+          </div>
+          <div>
+            <button id="submit">Submit</button>
+          </div>
+        </div>
+        <div class="fl jc-c notice-wrap">
+          <div id="notice" ></div>
+        </div>
+      </main>
+      <aside>
+        <div class="fl jc-fs">
+          <div id="countdown">
+            <p class="sec">--</p>
+          </div>
+          <div id="cur-score">
+            0
+          </div>
+        </div>
+        <div class="high-score-container fl jc-fs">
+          <h4>Rankings</h4>
+          <div id="high-score">
+          </div>
+          <button id="reset-top-ranked">Reset Rankings</button>
+        </div>
+      </aside>
     </div>
     <footer>
         <h3>Math Game</h3>
-        <p class="desc">Made by Dongju, Junhui and Dad</p>
+        <p>TODO: </p>
+        <ul>
+          <li>Timer, Score and Ranking</li>
+          <li>Level</li>
+          <li>subtract, divide and multiply</li>
+        </ul>
+        <p class="desc">Created by Dongju, Junhui and Dad</p>
     </footer>
   </body>
 

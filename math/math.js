@@ -1,6 +1,7 @@
-// import RankManager from './rank_manager.js'
+
 // import Map from './map.js'
-// import Control from './control.js'
+import Countdown from './countdown.js'
+import RankManager from './rank_manager.js'
 // import Action from './action.js';
 
 const _answer = document.getElementById("answer");
@@ -8,15 +9,18 @@ const _submit = document.getElementById("submit");
 const _numberA = document.getElementById("number_a");
 const _numberB = document.getElementById("number_b");
 const _notice = document.getElementById("notice");
+const _gameover = document.getElementById("gameover")
+const _restart = document.getElementById("restart")
+const _score = document.getElementById("cur-score");
 
 const THE_ANSWER_IS = {
   CORRECT: 1,
   INCORRECT: 2
 }
 
+let score = 0;
+
 const submitAnswer = () => {
-  console.log("answer", _answer.value);
-  console.log("getResult()", getResult());
   if (getResult() == _answer.value){
     correctAnswer();
   }else {
@@ -29,6 +33,8 @@ const getResult = () => {
 }
 const correctAnswer = () => {
   showResult(THE_ANSWER_IS.CORRECT);
+  score += 1;
+  renderScore()
   _answer.value = "";
   newQuestions();
 }
@@ -42,6 +48,25 @@ const newQuestions = () => {
 const getRandomInt = (max) => {
   return Math.floor(Math.random() * max);
 }
+const onFinished = () => {
+  _gameover.style.display = "block"
+  _answer.disabled = true;``
+  setTimeout(() => {
+    RankManager.setRank(score);
+  }, 200);
+}
+const startGame = () => {
+  const params = new URLSearchParams(window.location.search);
+  const time = params.get("time");
+  newQuestions();
+  RankManager.showTopRanks();
+  Countdown.startCountdown(params.get("time"), onFinished);
+}
+const renderScore = () => {
+  _score.innerText = score;
+}
+
+
 
 const showResult = (result) => {
   _notice.classList.add('active');
@@ -61,23 +86,11 @@ const showResult = (result) => {
       _notice.classList.add("wrong");
       break;
   }
-
-
-
-
-  // _notice.classList.remove('correct');
-
-  // _notice.classList.remove('active');
-
-  // _notice.addClass("correct");
 }
 
-
 window.addEventListener('DOMContentLoaded', (event) => {
-  newQuestions();
+  startGame();
 });
-
-
 
 _answer.addEventListener("keypress", (e) => {
   console.log(e.key);
@@ -90,9 +103,6 @@ _submit.addEventListener("click", (e) => {
   submitAnswer();
 })
 
-
-
-// document.getElementById("reset-top-ranked").addEventListener("click", function () {
-    // RankManager.resetTopRanks();
-    // window.location.reload();
-// })
+_restart.addEventListener("click", (e) => {
+  window.location.reload();
+})
