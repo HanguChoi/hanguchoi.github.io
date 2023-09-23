@@ -21,15 +21,17 @@ const THE_ANSWER_IS = {
 let score = 0;
 
 const submitAnswer = () => {
+  console.log("what is the answer value? ", _answer.value);
+  console.log("what is the getResult()? ", getResult());
   if (getResult() == _answer.value){
     correctAnswer();
   }else {
     wrongAnswer();
   }
-  _answer.focus();
+  // _answer.focus();
 }
 const getResult = () => {
-  return parseInt(_numberA.innerText) + parseInt(_numberB.innerText);
+  return parseInt(_numberA.innerText) - parseInt(_numberB.innerText);
 }
 const correctAnswer = () => {
   showResult(THE_ANSWER_IS.CORRECT);
@@ -42,12 +44,13 @@ const wrongAnswer = () => {
   showResult(THE_ANSWER_IS.INCORRECT);
 }
 const newQuestions = () => {
-  _numberA.innerText = getRandomInt(21);
-  _numberB.innerText = getRandomInt(21);
+  _numberA.innerText = getRandomInt(10, 20);
+  _numberB.innerText = getRandomInt(10, 20);
 }
-const getRandomInt = (max) => {
-  return Math.floor(Math.random() * max);
+const getRandomInt = (min, max) => {
+  return Math.floor(Math.random() * (max - min + 1) + min);
 }
+
 const onFinished = () => {
   _gameover.style.display = "block"
   _answer.disabled = true;``
@@ -61,7 +64,7 @@ const startGame = () => {
   newQuestions();
   RankManager.showTopRanks();
   Countdown.startCountdown(params.get("time"), onFinished);
-  _answer.focus();
+  // _answer.focus();
 }
 const renderScore = () => {
   _score.innerText = score;
@@ -94,7 +97,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
 });
 
 _answer.addEventListener("keypress", (e) => {
-  console.log(e.key);
   if (e.key == 'Enter'){
     submitAnswer();
   }

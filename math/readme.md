@@ -3,8 +3,8 @@
 ### 2023-09-23
 Level 2, 3
   - [x] Developer tools
-  - [x] Add more number - Level 1 programming
-  - [ ] minus - Level 1 programming
+  - [x] Add more number - Level 1 programming (min, max)
+  - [x] minus - Level 1 programming
   - [ ] Leve l concept - Level 1 programming
 
 
