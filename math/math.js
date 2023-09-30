@@ -100,7 +100,7 @@ const newQuestions = () => {
       bStart = 100;
       bEnd = 999;
       break;
-    case 3:
+    case 5:
       aStart = 100;
       aEnd = 999;
       bStart = 100;
