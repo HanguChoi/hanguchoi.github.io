@@ -63,7 +63,7 @@ const getResult = () => {
     case MATH_TYPE.MULTIPLY:
       return a * b;
     case MATH_TYPE.DIVIDE:
-      return a % b;
+      return a / b;
   }
 }
 const correctAnswer = () => {
@@ -107,8 +107,15 @@ const newQuestions = () => {
       bEnd = 999;
       break;
   }
-  _numberA.innerText = getRandomInt(aStart, aEnd);
-  _numberB.innerText = getRandomInt(bStart, bEnd);
+  if (curMathType == MATH_TYPE.DIVIDE){
+    const a = getRandomInt(aStart, aEnd);
+    const b = getRandomInt(bStart, bEnd);
+    _numberA.innerText = a * b;
+    _numberB.innerText = b;
+  }else {
+    _numberA.innerText = getRandomInt(aStart, aEnd);
+    _numberB.innerText = getRandomInt(bStart, bEnd);
+  }
 }
 const getRandomInt = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1) + min);
@@ -118,7 +125,7 @@ const onFinished = () => {
   _gameover.style.display = "block"
   _answer.disabled = true;``
   setTimeout(() => {
-    RankManager.setRank(score);
+    RankManager.setRank(score, curLevel, curMathType);
   }, 200);
 }
 const getMathSymbol = () => {

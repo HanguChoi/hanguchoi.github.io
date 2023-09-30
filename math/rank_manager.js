@@ -19,7 +19,7 @@ const store = {
     }
 }
 
-const setRank = (curScore) => {
+const setRank = (curScore, curLevel, curMathType) => {
     let ranked = false;
     let prevScore;
     const tr = store.loadTopRanked();
@@ -27,13 +27,13 @@ const setRank = (curScore) => {
     for (let i = 0; i < tr.length ;  i++){
         prevScore = tr[i].score;
         if (!ranked && curScore > prevScore){
-            tr.splice(i, 0, rank(getPlayerName(), curScore));
+            tr.splice(i, 0, rank(getPlayerName(), curScore, scoreDetail(curLevel, curMathType)));
             ranked = true;
         }
     }
 
     if (!ranked && tr.length < HIGH_SCORES_LIMIT){
-        tr.push(rank(getPlayerName(), curScore))
+        tr.push(rank(getPlayerName(), curScore, scoreDetail(curLevel, curMathType)))
     }
 
     store.saveTopRanked(tr);
@@ -47,9 +47,13 @@ const getPlayerName = () => {
 	return name;
 }
 
+const scoreDetail = (curLevel, curMathType) => {
+	return `Level ${curLevel} ${curMathType}`;
+}
+
 const renderRank = (rank, ps) => {
     return `
-        <p>
+        <p title="${ps.detail}">
             <span class="rank">${rank}</span>
             <span class="player">${ps.player}</span>
             <span class="score">${ps.score}</span>
@@ -58,8 +62,8 @@ const renderRank = (rank, ps) => {
 }
 
 // `---` is the default text for no data
-const rank = (name = ' --- ', score = ' --- ') => {
-    return { player: name, score: score };
+const rank = (name = ' --- ', score = ' --- ', detail = '') => {
+    return { player: name, score: score, detail: detail };
 };
 
 const renderRanks = (tr) => {
