@@ -36,6 +36,14 @@ aside {
   padding: 20px;
   align-items: flex-start;
 }
+.selector-wrap {
+  padding: 10px;
+}
+.selector-wrap > select{
+  font-size: 1.5rem;
+  padding: 6px 30px;
+  margin-left: 20px;
+}
 
 /* Math */
 .number-box{

@@ -2,7 +2,6 @@ const _countdown = document.querySelector("#countdown .sec");
 
 let countdown;
 let timeRemaining = null;
-const defaultTimeRemaining = 300;
 let onFinished;
 
 const COUNTDOWN_STATUS = {
@@ -17,7 +16,7 @@ const setCountdown = () => {
 }
 
 const startCountdown = (time, callback) => {
-  timeRemaining = time ? time : defaultTimeRemaining;
+  timeRemaining = time;
   onFinished = callback;
   clearInterval(countdown);
   renderCountdown();
