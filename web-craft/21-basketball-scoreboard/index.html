@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>Basketball Scoreboard</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #1a1a2e;
+      font-family: 'Arial Black', Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      padding: 80px 20px 20px;
+    }
+
+    h1 {
+      color: #ff6b35;
+      font-size: 2.2rem;
+      text-align: center;
+      letter-spacing: 3px;
+      text-shadow: 0 0 24px rgba(255, 107, 53, 0.5);
+    }
+
+    .scoreboard {
+      background: #16213e;
+      border: 3px solid #ff6b35;
+      border-radius: 24px;
+      padding: 40px 48px;
+      display: flex;
+      gap: 56px;
+      align-items: center;
+      box-shadow: 0 0 48px rgba(255, 107, 53, 0.15);
+    }
+
+    .team {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .team-name {
+      color: #888;
+      font-size: 0.85rem;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+    }
+
+    /* Big glowing score number */
+    .score {
+      color: #ff6b35;
+      font-size: 6rem;
+      font-weight: 900;
+      min-width: 130px;
+      text-align: center;
+      line-height: 1;
+      text-shadow: 0 0 32px rgba(255, 107, 53, 0.45);
+      transition: transform 0.1s;
+    }
+
+    .score.bump { transform: scale(1.18); }
+
+    .point-buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn {
+      background: #0f3460;
+      color: white;
+      border: 2px solid #ff6b35;
+      border-radius: 12px;
+      padding: 12px 18px;
+      font-size: 1.05rem;
+      font-family: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.12s;
+    }
+    .btn:hover  { background: #ff6b35; }
+    .btn:active { transform: scale(0.92); }
+
+    .divider {
+      color: #ff6b35;
+      font-size: 4rem;
+      font-weight: 900;
+      opacity: 0.6;
+    }
+
+    .reset-btn {
+      background: transparent;
+      color: #555;
+      border: 2px solid #333;
+      border-radius: 30px;
+      padding: 10px 36px;
+      font-size: 0.9rem;
+      font-family: inherit;
+      cursor: pointer;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .reset-btn:hover { border-color: #ff6b35; color: #ff6b35; }
+
+    .quarter-label {
+      color: #555;
+      font-size: 0.8rem;
+      letter-spacing: 3px;
+    }
+  </style>
+</head>
+<body>
+
+<style>
+  .wc-nav { position: fixed; top: 12px; left: 12px; display: flex; gap: 8px; z-index: 1000; }
+  .wc-nav a { background: rgba(0,0,0,0.65); color: white; text-decoration: none; padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-family: Arial, sans-serif; backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.15); }
+  .wc-nav a:hover { background: rgba(0,0,0,0.9); }
+</style>
+<nav class="wc-nav">
+  <a href="/">&#127968; Home</a>
+  <a href="/web-craft/">&#8592; Examples</a>
+</nav>
+
+<h1>🏀 Basketball Scoreboard</h1>
+
+<div class="scoreboard">
+
+  <div class="team">
+    <div class="team-name">Home</div>
+    <div class="score" id="home-score">0</div>
+    <div class="point-buttons">
+      <button class="btn" onclick="addPoints('home', 1)">+1</button>
+      <button class="btn" onclick="addPoints('home', 2)">+2</button>
+      <button class="btn" onclick="addPoints('home', 3)">+3</button>
+    </div>
+  </div>
+
+  <div class="divider">:</div>
+
+  <div class="team">
+    <div class="team-name">Guest</div>
+    <div class="score" id="guest-score">0</div>
+    <div class="point-buttons">
+      <button class="btn" onclick="addPoints('guest', 1)">+1</button>
+      <button class="btn" onclick="addPoints('guest', 2)">+2</button>
+      <button class="btn" onclick="addPoints('guest', 3)">+3</button>
+    </div>
+  </div>
+
+</div>
+
+<button class="reset-btn" onclick="resetAll()">Reset Score</button>
+
+<script>
+  // Store each team's score in a variable
+  let homeScore = 0;
+  let guestScore = 0;
+
+  function addPoints(team, points) {
+    if (team === 'home') {
+      homeScore = homeScore + points;
+      showScore('home-score', homeScore);
+    } else {
+      guestScore = guestScore + points;
+      showScore('guest-score', guestScore);
+    }
+  }
+
+  function showScore(elementId, value) {
+    const el = document.getElementById(elementId);
+    el.textContent = value;
+
+    // Quick bump animation
+    el.classList.add('bump');
+    setTimeout(() => el.classList.remove('bump'), 150);
+  }
+
+  function resetAll() {
+    homeScore = 0;
+    guestScore = 0;
+    document.getElementById('home-score').textContent = 0;
+    document.getElementById('guest-score').textContent = 0;
+  }
+</script>
+
+</body>
+</html>

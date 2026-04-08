@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>Name Card</title>
+  <meta charset="utf-8">
+  <style>
+    body  { font-family: Arial; text-align: center; padding: 80px; background: #fff0f5; }
+    h1    { font-size: 4rem; color: #e84393; }
+    input { font-size: 1.4rem; padding: 10px 16px; border-radius: 8px; border: 2px solid #e84393; }
+  </style>
+</head>
+<body>
+
+  <h1 id="display">Your Name</h1>
+
+  <input type="text" placeholder="Type your name..."
+         oninput="document.getElementById('display').textContent = this.value || 'Your Name'">
+
+</body>
+</html>

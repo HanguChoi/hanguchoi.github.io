@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>Fireworks</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #000;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+      cursor: crosshair;
+    }
+
+    canvas { display: block; }
+
+    .hint {
+      position: fixed;
+      top: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: rgba(255,255,255,0.5);
+      font-size: 0.9rem;
+      letter-spacing: 0.1em;
+      text-align: center;
+      pointer-events: none;
+      transition: opacity 1s;
+    }
+    .hint.hidden { opacity: 0; }
+  </style>
+</head>
+<body>
+<style>
+  .wc-nav { position: fixed; top: 12px; left: 12px; display: flex; gap: 8px; z-index: 1000; }
+  .wc-nav a { background: rgba(0,0,0,0.65); color: white; text-decoration: none; padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-family: Arial, sans-serif; backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.15); }
+  .wc-nav a:hover { background: rgba(0,0,0,0.9); }
+</style>
+<nav class="wc-nav">
+  <a href="/">&#127968; Home</a>
+  <a href="/web-craft/">&#8592; Examples</a>
+</nav>
+
+<canvas id="canvas"></canvas>
+<div class="hint" id="hint">Click anywhere to launch fireworks ✨</div>
+
+<script>
+  const canvas = document.getElementById('canvas');
+  const ctx    = canvas.getContext('2d');
+
+  let W, H;
+
+  function resize() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  // ---- Hide hint after first click ----
+  const hint = document.getElementById('hint');
+  canvas.addEventListener('click', function() {
+    hint.classList.add('hidden');
+  }, { once: true });
+
+  // ========== Particle ==========
+  // A single spark that flies out from the explosion center.
+  function Particle(x, y, color) {
+    const angle  = Math.random() * Math.PI * 2;
+    const speed  = Math.random() * 6 + 1;
+
+    this.x     = x;
+    this.y     = y;
+    this.vx    = Math.cos(angle) * speed;
+    this.vy    = Math.sin(angle) * speed;
+    this.alpha = 1;
+    this.color = color;
+    this.size  = Math.random() * 3 + 1;
+    this.decay = Math.random() * 0.015 + 0.012; // how fast it fades
+    this.gravity = 0.08;                          // pulls it down
+  }
+
+  Particle.prototype.update = function() {
+    this.x     += this.vx;
+    this.y     += this.vy;
+    this.vy    += this.gravity;   // gravity
+    this.vx    *= 0.98;           // air resistance
+    this.vy    *= 0.98;
+    this.alpha -= this.decay;
+  };
+
+  Particle.prototype.draw = function() {
+    ctx.save();
+    ctx.globalAlpha = Math.max(0, this.alpha);
+    ctx.fillStyle   = this.color;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  };
+
+  // ========== Rocket ==========
+  // Travels upward, then explodes.
+  function Rocket(x, targetY) {
+    this.x       = x;
+    this.y       = H;
+    this.targetY = targetY;
+    this.vy      = -(H - targetY) / 40; // speed to reach target in ~40 frames
+    this.color   = randomColor();
+    this.trail   = [];
+    this.done    = false;
+  }
+
+  Rocket.prototype.update = function() {
+    this.trail.push({ x: this.x, y: this.y });
+    if (this.trail.length > 8) this.trail.shift();
+
+    this.y += this.vy;
+    if (this.y <= this.targetY) {
+      this.done = true;
+      explode(this.x, this.y, this.color);
+    }
+  };
+
+  Rocket.prototype.draw = function() {
+    // Draw trail
+    this.trail.forEach(function(p, i) {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 2 * (i / 8), 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(255,200,100,0.5)';
+      ctx.fill();
+    });
+    // Draw head
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, 3, 0, Math.PI * 2);
+    ctx.fillStyle = 'white';
+    ctx.fill();
+  };
+
+  // ========== State ==========
+  let rockets   = [];
+  let particles = [];
+
+  // ========== Explode ==========
+  function explode(x, y, color) {
+    const count = Math.floor(Math.random() * 80 + 60);
+    for (let i = 0; i < count; i++) {
+      particles.push(new Particle(x, y, color));
+    }
+    // Secondary sparkle ring (white)
+    for (let i = 0; i < 20; i++) {
+      particles.push(new Particle(x, y, 'white'));
+    }
+  }
+
+  // ========== Random color ==========
+  function randomColor() {
+    const colors = [
+      '#fd79a8', '#fdcb6e', '#00b7ff', '#55efc4',
+      '#a29bfe', '#ff7675', '#74b9ff', '#00cec9',
+      '#e17055', '#b2bec3', '#ffeaa7', '#81ecec',
+    ];
+    return colors[Math.floor(Math.random() * colors.length)];
+  }
+
+  // ========== Launch ==========
+  function launch(x, y) {
+    rockets.push(new Rocket(x, y));
+  }
+
+  // ========== Auto-launch ==========
+  // Fire one automatically every ~2 seconds
+  setInterval(function() {
+    const x = Math.random() * W * 0.7 + W * 0.15;
+    const y = Math.random() * H * 0.4 + H * 0.05;
+    launch(x, y);
+  }, 2000);
+
+  // ========== Click to launch ==========
+  canvas.addEventListener('click', function(e) {
+    launch(e.clientX, e.clientY);
+  });
+
+  // ========== Animation loop ==========
+  function animate() {
+    requestAnimationFrame(animate);
+
+    // Dim instead of clear → keeps the glow trails
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.18)';
+    ctx.fillRect(0, 0, W, H);
+
+    // Update & draw rockets
+    rockets = rockets.filter(function(r) {
+      r.update();
+      if (!r.done) r.draw();
+      return !r.done;
+    });
+
+    // Update & draw particles
+    particles = particles.filter(function(p) {
+      p.update();
+      p.draw();
+      return p.alpha > 0;
+    });
+  }
+
+  animate();
+
+  // Fire a few to start
+  setTimeout(function() { launch(W * 0.3, H * 0.3); }, 400);
+  setTimeout(function() { launch(W * 0.6, H * 0.25); }, 900);
+  setTimeout(function() { launch(W * 0.5, H * 0.15); }, 1400);
+</script>
+
+</body>
+</html>

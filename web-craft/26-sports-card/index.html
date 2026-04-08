@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>My Sports Card</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #1a1a2e;
+      font-family: Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 32px;
+      padding: 80px 20px 40px;
+    }
+
+    h1 { color: #f9ca24; font-size: 2rem; }
+
+    .layout {
+      display: flex;
+      gap: 32px;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    /* ---- Trading Card ---- */
+    .card {
+      width: 220px;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 0 0 0 3px #f9ca24;
+      background: #16213e;
+      font-family: 'Arial Black', Arial, sans-serif;
+      flex-shrink: 0;
+    }
+
+    .card-banner {
+      padding: 20px;
+      text-align: center;
+      background: linear-gradient(135deg, #e17055, #d63031);  /* updated by JS */
+      transition: background 0.3s;
+    }
+
+    .card-sport-emoji {
+      font-size: 3.5rem;
+      display: block;
+    }
+
+    .card-number {
+      font-size: 1rem;
+      color: rgba(255, 255, 255, 0.8);
+      margin-top: 4px;
+      letter-spacing: 2px;
+    }
+
+    .card-body {
+      padding: 16px;
+    }
+
+    .card-name {
+      font-size: 1.1rem;
+      color: #f9ca24;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+      min-height: 1.4em;
+    }
+
+    .card-team {
+      font-size: 0.75rem;
+      color: #888;
+      letter-spacing: 2px;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      min-height: 1em;
+    }
+
+    .card-stats {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      color: #ccc;
+    }
+
+    .stat-value {
+      color: white;
+      font-weight: 700;
+    }
+
+    /* ---- Controls panel ---- */
+    .controls {
+      background: #2a2a2a;
+      border-radius: 16px;
+      padding: 24px;
+      width: 300px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .field-label {
+      color: #888;
+      font-size: 0.75rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    select {
+      width: 100%;
+      padding: 10px 14px;
+      font-size: 1rem;
+      font-family: Arial, sans-serif;
+      background: #1a1a2e;
+      border: 2px solid #444;
+      border-radius: 10px;
+      color: white;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    input[type="text"]:focus,
+    input[type="number"]:focus,
+    select:focus { border-color: #f9ca24; }
+
+    select option { background: #1a1a2e; }
+
+    .color-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .color-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 3px solid transparent;
+      cursor: pointer;
+      transition: transform 0.15s, border-color 0.15s;
+    }
+    .color-btn:hover    { transform: scale(1.15); }
+    .color-btn.selected { border-color: white; transform: scale(1.2); }
+  </style>
+</head>
+<body>
+
+<style>
+  .wc-nav { position: fixed; top: 12px; left: 12px; display: flex; gap: 8px; z-index: 1000; }
+  .wc-nav a { background: rgba(0,0,0,0.65); color: white; text-decoration: none; padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-family: Arial, sans-serif; backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.15); }
+  .wc-nav a:hover { background: rgba(0,0,0,0.9); }
+</style>
+<nav class="wc-nav">
+  <a href="/">&#127968; Home</a>
+  <a href="/web-craft/">&#8592; Examples</a>
+</nav>
+
+<h1>🏆 My Sports Card</h1>
+
+<div class="layout">
+
+  <!-- Live preview card -->
+  <div class="card">
+    <div class="card-banner" id="card-banner">
+      <span class="card-sport-emoji" id="card-emoji">🏀</span>
+      <div class="card-number" id="card-number">#0</div>
+    </div>
+    <div class="card-body">
+      <div class="card-name" id="card-name">Your Name</div>
+      <div class="card-team" id="card-team">Team Name</div>
+      <div class="card-stats" id="card-stats"></div>
+    </div>
+  </div>
+
+  <!-- Input controls -->
+  <div class="controls">
+
+    <div>
+      <label class="field-label">Your Name</label>
+      <input type="text" id="in-name" placeholder="Player name" maxlength="20"
+             oninput="update()">
+    </div>
+
+    <div>
+      <label class="field-label">Team Name</label>
+      <input type="text" id="in-team" placeholder="Team name" maxlength="24"
+             oninput="update()">
+    </div>
+
+    <div>
+      <label class="field-label">Sport</label>
+      <select id="in-sport" onchange="update()">
+        <option value="basketball">🏀 Basketball</option>
+        <option value="baseball">⚾ Baseball</option>
+        <option value="soccer">⚽ Soccer</option>
+        <option value="football">🏈 Football</option>
+      </select>
+    </div>
+
+    <div>
+      <label class="field-label">Jersey Number</label>
+      <input type="number" id="in-number" value="23" min="0" max="99"
+             oninput="update()">
+    </div>
+
+    <div>
+      <label class="field-label">Card Color</label>
+      <div class="color-row" id="color-row"></div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+  // Card color options
+  const cardColors = [
+    { label: 'Orange',  from: '#e17055', to: '#d63031' },
+    { label: 'Blue',    from: '#0652DD', to: '#1e3799' },
+    { label: 'Green',   from: '#00b894', to: '#009432' },
+    { label: 'Purple',  from: '#a29bfe', to: '#6c5ce7' },
+    { label: 'Gold',    from: '#f9ca24', to: '#e67e22' },
+    { label: 'Pink',    from: '#fd79a8', to: '#e84393' },
+  ];
+
+  // Stats per sport
+  const sportStats = {
+    basketball: ['basketball', ['PPG', 'APG', 'RPG', 'SPG']],
+    baseball:   ['baseball',  ['AVG', 'HR',  'RBI', 'SB']],
+    soccer:     ['soccer',    ['Goals', 'Assists', 'Passes', 'Rating']],
+    football:   ['football',  ['TDs', 'Yards', 'Catches', 'Speed']],
+  };
+
+  const sportEmojis = {
+    basketball: '🏀', baseball: '⚾', soccer: '⚽', football: '🏈',
+  };
+
+  let currentColorIndex = 0;
+
+  // Build color buttons
+  const colorRow = document.getElementById('color-row');
+  cardColors.forEach((c, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'color-btn' + (i === 0 ? ' selected' : '');
+    btn.style.background = `linear-gradient(135deg, ${c.from}, ${c.to})`;
+    btn.title = c.label;
+    btn.onclick = () => {
+      currentColorIndex = i;
+      document.querySelectorAll('.color-btn').forEach(b => b.className = 'color-btn');
+      btn.className = 'color-btn selected';
+      update();
+    };
+    colorRow.appendChild(btn);
+  });
+
+  // Generate a random but consistent stat value for each stat key
+  function fakeStat(sport, statName) {
+    const seed = sport.charCodeAt(0) + statName.charCodeAt(0);
+    if (statName === 'AVG') return (0.200 + (seed % 100) / 1000).toFixed(3);
+    if (statName === 'Rating') return (seed % 30 + 70);
+    if (['PPG', 'APG', 'RPG', 'SPG'].includes(statName)) return ((seed % 20) + 1).toFixed(1);
+    return (seed % 50) + 1;
+  }
+
+  function update() {
+    const name   = document.getElementById('in-name').value   || 'Your Name';
+    const team   = document.getElementById('in-team').value   || 'Team Name';
+    const sport  = document.getElementById('in-sport').value;
+    const number = document.getElementById('in-number').value || '0';
+    const color  = cardColors[currentColorIndex];
+
+    // Update card fields
+    document.getElementById('card-name').textContent    = name.toUpperCase();
+    document.getElementById('card-team').textContent    = team.toUpperCase();
+    document.getElementById('card-number').textContent  = '#' + number;
+    document.getElementById('card-emoji').textContent   = sportEmojis[sport];
+    document.getElementById('card-banner').style.background =
+      `linear-gradient(135deg, ${color.from}, ${color.to})`;
+
+    // Update stats
+    const [, statKeys] = sportStats[sport];
+    const statsEl = document.getElementById('card-stats');
+    statsEl.innerHTML = statKeys.map(k =>
+      `<div class="stat-row"><span>${k}</span><span class="stat-value">${fakeStat(sport, k)}</span></div>`
+    ).join('');
+  }
+
+  update();
+</script>
+
+</body>
+</html>

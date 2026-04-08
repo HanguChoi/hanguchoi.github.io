@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>Starfield</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #000;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+    }
+
+    canvas {
+      display: block;
+    }
+
+    /* ---- HUD overlay ---- */
+    .hud {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      background: rgba(0,0,0,0.6);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 40px;
+      padding: 10px 24px;
+    }
+
+    .hud label {
+      color: rgba(255,255,255,0.7);
+      font-size: 0.82rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    input[type=range] { accent-color: #00b7ff; width: 100px; }
+
+    .hud-val {
+      color: #00b7ff;
+      font-size: 0.82rem;
+      min-width: 28px;
+    }
+
+    .title {
+      position: fixed;
+      top: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: rgba(255,255,255,0.6);
+      font-size: 1rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+<style>
+  .wc-nav { position: fixed; top: 12px; left: 12px; display: flex; gap: 8px; z-index: 1000; }
+  .wc-nav a { background: rgba(0,0,0,0.65); color: white; text-decoration: none; padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-family: Arial, sans-serif; backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.15); }
+  .wc-nav a:hover { background: rgba(0,0,0,0.9); }
+</style>
+<nav class="wc-nav">
+  <a href="/">&#127968; Home</a>
+  <a href="/web-craft/">&#8592; Examples</a>
+</nav>
+
+<div class="title">Starfield</div>
+<canvas id="canvas"></canvas>
+
+<div class="hud">
+  <label>
+    Stars
+    <input type="range" id="num-stars" min="50" max="600" value="250">
+    <span class="hud-val" id="num-val">250</span>
+  </label>
+  <label>
+    Speed
+    <input type="range" id="speed" min="1" max="20" value="5">
+    <span class="hud-val" id="speed-val">5</span>
+  </label>
+</div>
+
+<script>
+  const canvas = document.getElementById('canvas');
+  const ctx    = canvas.getContext('2d');
+
+  let W, H, CX, CY;
+  let stars = [];
+  let numStars = 250;
+  let speed    = 5;
+
+  // ---- Resize to fill the window ----
+  function resize() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+    CX = W / 2;
+    CY = H / 2;
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  // ---- A single star ----
+  // Each star has a random (x, y) position and a z depth.
+  // As z decreases (star comes closer) it appears bigger and faster.
+  function createStar() {
+    return {
+      x: Math.random() * W - CX,  // relative to center
+      y: Math.random() * H - CY,
+      z: Math.random() * W,        // depth (W = far, 0 = very close)
+      pz: 0,                        // previous z (for drawing the trail)
+    };
+  }
+
+  function initStars() {
+    stars = [];
+    for (let i = 0; i < numStars; i++) {
+      stars.push(createStar());
+    }
+  }
+  initStars();
+
+  // ---- Main animation loop ----
+  function animate() {
+    requestAnimationFrame(animate);
+
+    // Fade the background (leave a slight trail for motion blur effect)
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+    ctx.fillRect(0, 0, W, H);
+
+    stars.forEach(function(star) {
+      // Move star toward us (decrease z)
+      star.pz = star.z;
+      star.z -= speed;
+
+      // If star goes off screen, reset it far away
+      if (star.z <= 0) {
+        star.x  = Math.random() * W - CX;
+        star.y  = Math.random() * H - CY;
+        star.z  = W;
+        star.pz = W;
+        return;
+      }
+
+      // Project 3D position to 2D screen coordinates
+      // Closer = larger x/y offset from center
+      const sx = (star.x / star.z)  * W + CX;
+      const sy = (star.y / star.z)  * W + CY;
+
+      // Previous position (for trail line)
+      const px = (star.x / star.pz) * W + CX;
+      const py = (star.y / star.pz) * W + CY;
+
+      // Size grows as star gets closer (smaller z)
+      const size = Math.max(0.1, (1 - star.z / W) * 3);
+
+      // Color: far = dim blue, close = bright white
+      const brightness = Math.floor((1 - star.z / W) * 255);
+      ctx.strokeStyle = 'rgb(' + brightness + ', ' + brightness + ', 255)';
+      ctx.lineWidth   = size;
+
+      // Draw a short line from previous position to current
+      ctx.beginPath();
+      ctx.moveTo(px, py);
+      ctx.lineTo(sx, sy);
+      ctx.stroke();
+    });
+  }
+
+  animate();
+
+  // ---- Controls ----
+  document.getElementById('num-stars').addEventListener('input', function() {
+    numStars = parseInt(this.value);
+    document.getElementById('num-val').textContent = numStars;
+    initStars();
+  });
+
+  document.getElementById('speed').addEventListener('input', function() {
+    speed = parseInt(this.value);
+    document.getElementById('speed-val').textContent = speed;
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>Click Counter</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #2d3436;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      text-align: center;
+    }
+
+    /* Big number display */
+    #count {
+      font-size: 8rem;
+      font-weight: bold;
+      color: white;
+      line-height: 1;
+      margin-bottom: 16px;
+      /* Animate when the number changes */
+      transition: transform 0.1s;
+    }
+
+    #count.bump {
+      transform: scale(1.2);
+    }
+
+    .label {
+      color: #b2bec3;
+      font-size: 1rem;
+      margin-bottom: 40px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    /* Main click button */
+    #btn-click {
+      background: #00b7ff;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 140px;
+      height: 140px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+      box-shadow: 0 6px 24px rgba(0, 183, 255, 0.5);
+    }
+
+    #btn-click:hover  { background: #0099dd; }
+    #btn-click:active { transform: scale(0.93); }
+
+    /* Reset button */
+    #btn-reset {
+      display: block;
+      margin: 24px auto 0;
+      background: transparent;
+      color: #636e72;
+      border: 1px solid #636e72;
+      border-radius: 8px;
+      padding: 8px 24px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    #btn-reset:hover { color: #dfe6e9; border-color: #dfe6e9; }
+  </style>
+</head>
+<body>
+<style>
+  .wc-nav { position: fixed; top: 12px; left: 12px; display: flex; gap: 8px; z-index: 1000; }
+  .wc-nav a { background: rgba(0,0,0,0.65); color: white; text-decoration: none; padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-family: Arial, sans-serif; backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.15); }
+  .wc-nav a:hover { background: rgba(0,0,0,0.9); }
+</style>
+<nav class="wc-nav">
+  <a href="/">&#127968; Home</a>
+  <a href="/web-craft/">&#8592; Examples</a>
+</nav>
+
+<div class="container">
+  <div id="count">0</div>
+  <div class="label">clicks</div>
+
+  <button id="btn-click">CLICK ME!</button>
+  <button id="btn-reset">Reset</button>
+</div>
+
+<script>
+  // This variable stores our count.
+  // It lives in JavaScript — not in the HTML.
+  let count = 0;
+
+  // Get references to the elements we want to control
+  const countEl  = document.getElementById('count');
+  const btnClick = document.getElementById('btn-click');
+  const btnReset = document.getElementById('btn-reset');
+
+  // --- What happens when you click the big button ---
+  btnClick.addEventListener('click', function() {
+    count = count + 1;          // increase the count by 1
+    countEl.textContent = count; // show the new number
+
+    // Little "bump" animation
+    countEl.classList.add('bump');
+    setTimeout(function() {
+      countEl.classList.remove('bump');
+    }, 100);
+
+    // Change color based on how high the count is
+    if (count >= 20) {
+      countEl.style.color = '#fd79a8'; // pink for 20+
+    } else if (count >= 10) {
+      countEl.style.color = '#fdcb6e'; // gold for 10+
+    } else if (count >= 3) {
+      countEl.style.color = '#55efc4'; // green for 30+
+    } else {
+      countEl.style.color = 'white';
+    }
+  });
+
+  // --- What happens when you click Reset ---
+  btnReset.addEventListener('click', function() {
+    count = 0;
+    countEl.textContent = count;
+    countEl.style.color = 'white';
+  });
+</script>
+
+</body>
+</html>

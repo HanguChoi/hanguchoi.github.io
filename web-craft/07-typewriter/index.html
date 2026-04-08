@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>Typewriter Effect</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      background: #2d3436;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Courier New', monospace;
+      padding: 24px;
+    }
+
+    /* ---- Terminal window ---- */
+    .terminal {
+      background: #1a1a1a;
+      border-radius: 12px;
+      overflow: hidden;
+      width: min(680px, 95vw);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    }
+
+    /* Fake title bar */
+    .title-bar {
+      background: #3a3a3a;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .dot { width: 12px; height: 12px; border-radius: 50%; }
+    .dot-red    { background: #ff5f56; }
+    .dot-yellow { background: #ffbd2e; }
+    .dot-green  { background: #27c93f; }
+
+    .title-bar-text {
+      flex: 1;
+      text-align: center;
+      color: #888;
+      font-size: 0.8rem;
+    }
+
+    /* The text area */
+    .screen {
+      padding: 32px;
+      min-height: 260px;
+    }
+
+    /* Each line */
+    .line {
+      display: block;
+      margin-bottom: 20px;
+      font-size: 1.4rem;
+      min-height: 1.8rem;
+    }
+    .line.prompt {
+      color: #e0e0e0;
+    }
+    .line.prompt::before {
+      content: '> ';
+      color: #00ff88;
+    }
+    .line.output {
+      color: #fdcb6e;
+      padding-left: 20px;
+    }
+
+    /* Blinking cursor */
+    .cursor {
+      display: inline-block;
+      width: 2px;
+      height: 1.2em;
+      background: #00ff88;
+      margin-left: 2px;
+      vertical-align: middle;
+      animation: blink 0.8s step-end infinite;
+    }
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+
+    /* ---- Controls ---- */
+    .controls {
+      margin-top: 32px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    button {
+      background: transparent;
+      border: 1px solid #636e72;
+      color: #b2bec3;
+      padding: 8px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    button:hover { color: white; border-color: white; }
+
+    label {
+      color: #b2bec3;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    input[type=range] { accent-color: #00ff88; }
+  </style>
+</head>
+<body>
+<style>
+  .wc-nav { position: fixed; top: 12px; left: 12px; display: flex; gap: 8px; z-index: 1000; }
+  .wc-nav a { background: rgba(0,0,0,0.65); color: white; text-decoration: none; padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-family: Arial, sans-serif; backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.15); }
+  .wc-nav a:hover { background: rgba(0,0,0,0.9); }
+</style>
+<nav class="wc-nav">
+  <a href="/">&#127968; Home</a>
+  <a href="/web-craft/">&#8592; Examples</a>
+</nav>
+
+<div class="terminal">
+  <div class="title-bar">
+    <div class="dot dot-red"></div>
+    <div class="dot dot-yellow"></div>
+    <div class="dot dot-green"></div>
+    <div class="title-bar-text">typewriter.js</div>
+  </div>
+  <div class="screen" id="screen">
+    <!-- Lines are added here by JavaScript -->
+  </div>
+</div>
+
+<div class="controls">
+  <button id="btn-replay">Replay</button>
+  <label>
+    Speed:
+    <input type="range" id="speed" min="20" max="200" value="60">
+  </label>
+</div>
+
+<script>
+  // ---- Script: what to type out, line by line ----
+  // Each entry has the text and the style ('prompt' or 'output')
+  const script = [
+    { text: 'Hello, World!',                    style: 'prompt' },
+    { text: 'I am learning JavaScript.',         style: 'output' },
+    { text: 'What can I make with code?',        style: 'prompt' },
+    { text: 'Games, animations, tools…',         style: 'output' },
+    { text: 'Cool! Let\'s build something!',     style: 'prompt' },
+    { text: '🚀  Starting now…',                style: 'output' },
+  ];
+
+  const screen  = document.getElementById('screen');
+  let lineIndex = 0;  // which line we are currently typing
+  let charIndex = 0;  // which character within that line
+  let lineEl    = null;
+  let timer     = null;
+
+  // How many ms to wait between each character
+  function getDelay() {
+    return parseInt(document.getElementById('speed').value);
+  }
+
+  // Add a new empty line element to the screen
+  function startLine() {
+    lineEl = document.createElement('span');
+    lineEl.className = 'line ' + script[lineIndex].style;
+    screen.appendChild(lineEl);
+  }
+
+  // Type one character, then schedule the next
+  function typeChar() {
+    const currentLine = script[lineIndex];
+
+    if (charIndex < currentLine.text.length) {
+      // Add the next character (no cursor yet)
+      lineEl.textContent = currentLine.text.slice(0, charIndex + 1);
+      charIndex++;
+      timer = setTimeout(typeChar, getDelay());
+    } else {
+      // Finished this line — pause then move to next
+      charIndex = 0;
+      lineIndex++;
+
+      if (lineIndex < script.length) {
+        // Short pause between lines
+        timer = setTimeout(function() {
+          startLine();
+          typeChar();
+        }, getDelay() * 8);
+      } else {
+        // All done — add blinking cursor to last line
+        const cursor = document.createElement('span');
+        cursor.className = 'cursor';
+        lineEl.appendChild(cursor);
+      }
+    }
+  }
+
+  function start() {
+    clearTimeout(timer);
+    screen.innerHTML = '';
+    lineIndex = 0;
+    charIndex = 0;
+    startLine();
+    typeChar();
+  }
+
+  document.getElementById('btn-replay').addEventListener('click', start);
+
+  start();
+</script>
+
+</body>
+</html>

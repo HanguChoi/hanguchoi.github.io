@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>Hover Cards</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      background: #f0f4f8;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+    }
+
+    h1 {
+      font-size: 1.6rem;
+      color: #2d3436;
+      margin-bottom: 8px;
+    }
+    .subtitle {
+      color: #636e72;
+      margin-bottom: 40px;
+      font-size: 0.95rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 24px;
+      max-width: 900px;
+      width: 100%;
+    }
+
+    /* ---- Base card style ---- */
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 32px 24px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+
+      /* These two lines make hover animations smooth */
+      transition: transform 0.25s, box-shadow 0.25s;
+
+      cursor: default;
+    }
+
+    /* ---- What happens ON hover ---- */
+    .card:hover {
+      transform: translateY(-10px);   /* move up 10px */
+      box-shadow: 0 16px 40px rgba(0,0,0,0.16);
+    }
+
+    .card-icon {
+      font-size: 3rem;
+      margin-bottom: 16px;
+      display: block;
+      /* spin the icon on hover */
+      transition: transform 0.4s;
+    }
+    .card:hover .card-icon {
+      transform: rotate(15deg) scale(1.2);
+    }
+
+    .card h3 {
+      font-size: 1.1rem;
+      margin-bottom: 8px;
+    }
+
+    .card p {
+      font-size: 0.85rem;
+      color: #636e72;
+      line-height: 1.5;
+    }
+
+    /* Each card gets a unique accent color on the top border */
+    .card-1 { border-top: 4px solid #00b7ff; }
+    .card-2 { border-top: 4px solid #fd79a8; }
+    .card-3 { border-top: 4px solid #55efc4; }
+    .card-4 { border-top: 4px solid #fdcb6e; }
+    .card-5 { border-top: 4px solid #a29bfe; }
+    .card-6 { border-top: 4px solid #e17055; }
+
+    /* Flip card (bonus!) */
+    .flip-wrapper {
+      perspective: 600px;
+      height: 220px;
+    }
+    .flip-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      transition: transform 0.6s;
+    }
+    .flip-wrapper:hover .flip-inner {
+      transform: rotateY(180deg);
+    }
+    .flip-front, .flip-back {
+      position: absolute;
+      inset: 0;
+      background: white;
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 24px;
+      backface-visibility: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .flip-back {
+      transform: rotateY(180deg);
+      background: #6c5ce7;
+      color: white;
+    }
+    .flip-back h3 { color: white; margin-bottom: 8px; }
+    .flip-back p  { color: rgba(255,255,255,0.85); font-size: 0.85rem; }
+    .flip-front { border-top: 4px solid #6c5ce7; }
+  </style>
+</head>
+<body>
+<style>
+  .wc-nav { position: fixed; top: 12px; left: 12px; display: flex; gap: 8px; z-index: 1000; }
+  .wc-nav a { background: rgba(0,0,0,0.65); color: white; text-decoration: none; padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-family: Arial, sans-serif; backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.15); }
+  .wc-nav a:hover { background: rgba(0,0,0,0.9); }
+</style>
+<nav class="wc-nav">
+  <a href="/">&#127968; Home</a>
+  <a href="/web-craft/">&#8592; Examples</a>
+</nav>
+
+<h1>Hover Cards</h1>
+<p class="subtitle">Move your mouse over the cards to see the effect!</p>
+
+<div class="grid">
+
+  <div class="card card-1">
+    <span class="card-icon">🚀</span>
+    <h3>Lift Effect</h3>
+    <p>Cards float upward when you hover — done with <code>translateY</code>.</p>
+  </div>
+
+  <div class="card card-2">
+    <span class="card-icon">💡</span>
+    <h3>Shadow</h3>
+    <p>A bigger shadow makes it look like the card is casting more shade.</p>
+  </div>
+
+  <div class="card card-3">
+    <span class="card-icon">🎨</span>
+    <h3>Icon Spin</h3>
+    <p>The emoji rotates on hover using <code>rotate()</code> and <code>scale()</code>.</p>
+  </div>
+
+  <div class="card card-4">
+    <span class="card-icon">⚡</span>
+    <h3>Transition</h3>
+    <p><code>transition</code> makes the animation smooth instead of instant.</p>
+  </div>
+
+  <div class="card card-5">
+    <span class="card-icon">🌈</span>
+    <h3>Colors</h3>
+    <p>Each card has a different border color set with a class like <code>card-1</code>.</p>
+  </div>
+
+  <!-- Bonus: flip card -->
+  <div class="flip-wrapper">
+    <div class="flip-inner">
+      <div class="flip-front">
+        <span style="font-size:3rem; margin-bottom:16px;">🃏</span>
+        <h3>Flip Card</h3>
+        <p style="font-size:0.85rem; color:#636e72;">Hover me!</p>
+      </div>
+      <div class="flip-back">
+        <span style="font-size:3rem; margin-bottom:16px;">✨</span>
+        <h3>Surprise!</h3>
+        <p>This uses 3D CSS with <code>rotateY</code> and <code>perspective</code>.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

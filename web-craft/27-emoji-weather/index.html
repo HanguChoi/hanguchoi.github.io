@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>Emoji Weather</title>
+  <meta charset="utf-8">
+  <style>
+    body   { font-family: Arial; text-align: center; padding: 80px; background: #e8f4fd; }
+    #sky   { font-size: 8rem; min-height: 150px; }
+    button { font-size: 1.2rem; margin: 8px; padding: 10px 24px; cursor: pointer; }
+  </style>
+</head>
+<body>
+
+  <!-- <div id="red">hi</div>
+  <div id="orange">hi</div>
+  <div id="yellow">hi</div>
+  <div id="green">hi</div>
+  <div id="blue">hi</div>
+  <div id="navi">hi</div>
+  <div id="violet">hi</div> -->
+  <h1>What's the weather today?</h1>
+  <p id="sky">☀️</p>
+
+  <button onclick="show('☀️')">Sunny</button>
+  <button onclick="show('🌧️')">Rainy</button>
+  <button onclick="show('❄️')">Snowy</button>
+  <button onclick="show('⛈️')">Stormy</button>
+  <!-- <button onclick="show('🌈')">RainbowChar</button> -->
+  <button onclick="showRainbow()">Rainbow</button>
+
+  <script>
+    const BANDS     = ["#f60e25","#FD8001","yellow","#3fa200","#2472ff","#0d3383","#6b00c4"];
+    function show(emoji) {
+      document.getElementById('sky').innerHTML = emoji;
+    }
+
+    function showRainbow() {
+      const radius    = 140;
+      const bandWidth = 12;
+      const cx        = radius;
+      const cy        = radius;
+
+      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.setAttribute('viewBox', '0 0 280 140');
+      // svg.setAttribute('width', '280');
+      // svg.setAttribute('height', '140');
+      svg.setAttribute('width', '240');
+      svg.setAttribute('height', '120');
+
+
+      BANDS.forEach(function(color, i) {
+        const r = radius - i * bandWidth - bandWidth / 2;
+        const d = `M ${cx - r},${cy} A ${r},${r} 0 0,1 ${cx + r},${cy}`;
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.setAttribute('d', d);
+        path.setAttribute('fill', 'none');
+        path.setAttribute('stroke', color);
+        path.setAttribute('stroke-width', bandWidth);
+        path.setAttribute('stroke-linecap', 'round');
+        svg.appendChild(path);
+      });
+
+      const sky = document.getElementById('sky');
+      sky.innerHTML = '';
+      sky.appendChild(svg);
+    }
+    // document.getElementById("red").style.backgroundColor = BANDS[0];
+    // document.getElementById("orange").style.backgroundColor =  BANDS[1];
+    // document.getElementById("yellow").style.backgroundColor =  BANDS[2];
+    // document.getElementById("green").style.backgroundColor = BANDS[3];
+    // document.getElementById("blue").style.backgroundColor = BANDS[4];
+    // document.getElementById("navi").style.backgroundColor = BANDS[5];
+    // document.getElementById("violet").style.backgroundColor = BANDS[6];
+
+
+  </script>
+
+</body>
+</html>

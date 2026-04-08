@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>Resources &amp; Tools — Web Craft</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f0f4f8;
+      color: #222;
+    }
+
+    header {
+      background: linear-gradient(135deg, #6c5ce7, #00b7ff);
+      color: white;
+      padding: 40px 24px;
+      text-align: center;
+    }
+    header h1 { font-size: 2.2rem; margin-bottom: 10px; }
+    header p  { font-size: 1.05rem; opacity: 0.9; }
+
+    .page { max-width: 900px; margin: 0 auto; padding: 40px 24px 60px; }
+
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #888;
+      padding: 32px 0 12px;
+      border-bottom: 2px solid #e0e8f0;
+      margin-bottom: 20px;
+    }
+
+    /* Resource card grid */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+      margin-bottom: 8px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 14px;
+      padding: 20px;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      transition: transform 0.18s, box-shadow 0.18s;
+      border: 2px solid transparent;
+    }
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+      border-color: #00b7ff;
+    }
+
+    .card-icon {
+      font-size: 2rem;
+      flex-shrink: 0;
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+    }
+
+    .card-text h3 { font-size: 0.95rem; margin-bottom: 4px; }
+    .card-text p  { font-size: 0.82rem; color: #666; line-height: 1.4; }
+
+    .tag {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 2px 8px;
+      border-radius: 10px;
+      margin-top: 6px;
+      margin-right: 4px;
+    }
+    .tag-free    { background: #d4f5d4; color: #1a6e1a; }
+    .tag-game    { background: #ffe8d4; color: #8a3a00; }
+    .tag-tool    { background: #e0e8ff; color: #1a2e8a; }
+    .tag-video   { background: #fce8f0; color: #8a1a50; }
+    .tag-ref     { background: #f0e8ff; color: #5a1a8a; }
+
+    /* Icon bg colors */
+    .bg-blue   { background: #dbeeff; }
+    .bg-orange { background: #fff0e0; }
+    .bg-green  { background: #d8f5e4; }
+    .bg-purple { background: #ede8ff; }
+    .bg-pink   { background: #ffe8f5; }
+    .bg-yellow { background: #fffae0; }
+    .bg-teal   { background: #d8f5f3; }
+    .bg-red    { background: #ffe8e8; }
+
+    footer { text-align: center; padding: 32px; color: #aaa; font-size: 0.85rem; }
+  </style>
+</head>
+<body>
+
+<style>
+  .wc-nav { position: fixed; top: 12px; left: 12px; display: flex; gap: 8px; z-index: 1000; }
+  .wc-nav a { background: rgba(0,0,0,0.65); color: white; text-decoration: none; padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-family: Arial, sans-serif; backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.15); }
+  .wc-nav a:hover { background: rgba(0,0,0,0.9); }
+</style>
+<nav class="wc-nav">
+  <a href="/">&#127968; Home</a>
+  <a href="/web-craft/">&#8592; Examples</a>
+</nav>
+
+<header>
+  <h1>📚 Resources &amp; Tools</h1>
+  <p>Websites, games, and tools to help you learn and practice web dev</p>
+</header>
+
+<div class="page">
+
+  <!-- ======================== LEARN ======================== -->
+  <div class="section-label">Learn the Basics</div>
+  <div class="grid">
+
+    <a class="card" href="https://www.w3schools.com/html" target="_blank" rel="noopener">
+      <div class="card-icon bg-green">🏫</div>
+      <div class="card-text">
+        <h3>W3Schools — HTML</h3>
+        <p>The most beginner-friendly HTML reference. Try every example live right in the browser!</p>
+        <span class="tag tag-free">Free</span><span class="tag tag-ref">Reference</span>
+      </div>
+    </a>
+
+    <a class="card" href="https://www.w3schools.com/css" target="_blank" rel="noopener">
+      <div class="card-icon bg-blue">🎨</div>
+      <div class="card-text">
+        <h3>W3Schools — CSS</h3>
+        <p>Colors, fonts, layouts — every CSS property explained with live examples you can edit.</p>
+        <span class="tag tag-free">Free</span><span class="tag tag-ref">Reference</span>
+      </div>
+    </a>
+
+    <a class="card" href="https://www.w3schools.com/js" target="_blank" rel="noopener">
+      <div class="card-icon bg-yellow">⚡</div>
+      <div class="card-text">
+        <h3>W3Schools — JavaScript</h3>
+        <p>Learn JS step by step — variables, functions, events. Great for beginners!</p>
+        <span class="tag tag-free">Free</span><span class="tag tag-ref">Reference</span>
+      </div>
+    </a>
+
+  </div>
+
+  <!-- ======================== PRACTICE ======================== -->
+  <div class="section-label">Practice Online</div>
+  <div class="grid">
+
+    <a class="card" href="https://codepen.io" target="_blank" rel="noopener">
+      <div class="card-icon bg-blue">✏️</div>
+      <div class="card-text">
+        <h3>CodePen</h3>
+        <p>Write HTML, CSS, and JS in your browser and see results instantly. Our main practice tool!</p>
+        <span class="tag tag-free">Free</span><span class="tag tag-tool">Sandbox</span>
+      </div>
+    </a>
+
+  </div>
+
+  <!-- ======================== TOOLS ======================== -->
+  <div class="section-label">Useful Tools</div>
+  <div class="grid">
+
+    <a class="card" href="https://coolors.co" target="_blank" rel="noopener">
+      <div class="card-icon bg-pink">🎨</div>
+      <div class="card-text">
+        <h3>Coolors</h3>
+        <p>Hit the spacebar to generate beautiful color palettes. Copy hex codes for your CSS!</p>
+        <span class="tag tag-free">Free</span><span class="tag tag-tool">Colors</span>
+      </div>
+    </a>
+
+    <a class="card" href="https://fonts.google.com" target="_blank" rel="noopener">
+      <div class="card-icon bg-blue">🔤</div>
+      <div class="card-text">
+        <h3>Google Fonts</h3>
+        <p>Free fonts you can add to any webpage with one line of code. Hundreds of styles!</p>
+        <span class="tag tag-free">Free</span><span class="tag tag-tool">Fonts</span>
+      </div>
+    </a>
+
+    <a class="card" href="https://emojipedia.org" target="_blank" rel="noopener">
+      <div class="card-icon bg-yellow">😄</div>
+      <div class="card-text">
+        <h3>Emojipedia</h3>
+        <p>Search and copy any emoji. Emojis work great in HTML — no images needed!</p>
+        <span class="tag tag-free">Free</span><span class="tag tag-tool">Icons</span>
+      </div>
+    </a>
+
+    <a class="card" href="https://haikei.app" target="_blank" rel="noopener">
+      <div class="card-icon bg-teal">🌊</div>
+      <div class="card-text">
+        <h3>Haikei</h3>
+        <p>Generate cool wavy backgrounds, blobs, and shapes for free. Copy as CSS or SVG!</p>
+        <span class="tag tag-free">Free</span><span class="tag tag-tool">Design</span>
+      </div>
+    </a>
+
+    <a class="card" href="https://cssgradient.io" target="_blank" rel="noopener">
+      <div class="card-icon bg-orange">🌈</div>
+      <div class="card-text">
+        <h3>CSS Gradient</h3>
+        <p>Visually create beautiful CSS gradients. Drag sliders and copy the code!</p>
+        <span class="tag tag-free">Free</span><span class="tag tag-tool">Colors</span>
+      </div>
+    </a>
+
+    <a class="card" href="https://animate.style" target="_blank" rel="noopener">
+      <div class="card-icon bg-purple">✨</div>
+      <div class="card-text">
+        <h3>Animate.css</h3>
+        <p>Ready-made CSS animations. Add a class name to make anything bounce, fade, or slide!</p>
+        <span class="tag tag-free">Free</span><span class="tag tag-tool">Animation</span>
+      </div>
+    </a>
+
+  </div>
+
+
+</div>
+
+<footer>Web Craft — made for learning HTML, CSS &amp; JavaScript</footer>
+
+</body>
+</html>

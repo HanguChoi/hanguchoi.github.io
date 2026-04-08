@@ -86,100 +86,6 @@
         background-color: #0b780b;
       }
 
-      /* Covid World Map */
-      #world-wrap .legend {
-        font-family: Montserrat, Avenir Next, Arial, Helvetica, sans-serif;
-        font: 12px sans-serif;
-      }
-      #world-wrap .legendTitle {
-        font-size: 14px;
-        font-weight: bold;
-      }
-      #world-wrap .country {
-        fill: #f3f3f3;
-      }
-      #world-wrap .q1-5 {
-        fill: #fee5d9;
-      }
-      #world-wrap .q2-5 {
-        fill: #fcae91;
-      }
-      #world-wrap .q3-5 {
-        fill: #fb6a4a;
-      }
-      #world-wrap .q4-5 {
-        fill: #de2d26;
-      }
-      #world-wrap .q5-5 {
-        fill: #a50f15;
-      }
-      #world-wrap .g.q1-5 {
-        fill: #edf8e9;
-      }
-      #world-wrap .g.q2-5 {
-        fill: #bae4b3;
-      }
-      #world-wrap .g.q3-5 {
-        fill: #74c476;
-      }
-      #world-wrap .g.q4-5 {
-        fill: #31a354;
-      }
-      #world-wrap .g.q5-5 {
-        fill: #006d2c;
-      }
-      #world-wrap .o.q1-5 {
-        fill: #feedde;
-      }
-      #world-wrap .o.q2-5 {
-        fill: #fdbe85;
-      }
-      #world-wrap .o.q3-5 {
-        fill: #fd8d3c;
-      }
-      #world-wrap .o.q4-5 {
-        fill: #e6550d;
-      }
-      #world-wrap .o.q5-5 {
-        fill: #a63603;
-      }
-      #world-wrap .buttons {
-        width: 400px;
-        min-height: 600px;
-        height: 100%;
-        margin-left: 18px;
-        padding: 10px;
-      }
-      #world-wrap button {
-        background-color: #a50f15;
-        color: white;
-        margin: 10px 0;
-        display: block;
-      }
-      #world-wrap button.o {
-        background-color: #e6550d;
-      }
-      #world-wrap button.g {
-        background-color: #31a354;
-      }
-      #world-wrap .desc {
-        font-family: Montserrat, Avenir Next, Arial, Helvetica, sans-serif;
-        min-height: 50px;
-        border: 1px solid #cdcdcd;
-        padding: 10px 4px;
-        font-size: 12px;
-      }
-
-      #player-wrap button {
-        background-color: #002652;
-        color: white;
-        margin: 10px 0;
-        display: block;
-      }
-
-      #pie-wrap text {
-        color: white;
-      }
     </style>
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.2.8/d3.min.js"
@@ -198,7 +104,6 @@
     <div class="fl">
       <div class="buttons">
         <button id="felidae">Felidae Taxon Hierarchy</button>
-        <button id="world">Covid19 World Map</button>
       </div>
 
       <div class="authors">
@@ -217,41 +122,11 @@
         </div>
       </div>
     </div>
-    <div id="world-wrap" class="viz">
-      <h1>Covid19 World Map</h1>
-      <div class="wrap fl-s">
-        <div class="svg-wrap">
-          <svg style="width: 900px; height: 600px"></svg>
-        </div>
-        <div class="buttons">
-          <h4>Zoom the map & Click buttons to explore data.</h4>
-          <div class="desc">Click country in the map to see detailed data</div>
-        </div>
-      </div>
-    </div>
     <script src="./felidae.js"></script>
-    <script src="./world.js"></script>
     <script>
       Felidae().start();
 
-      document.querySelectorAll(".buttons > button").forEach((btn) => {
-        btn.addEventListener("click", function () {
-          document
-            .querySelectorAll(".viz")
-            .forEach((e) => (e.style.display = "none"));
-          document.querySelectorAll("svg").forEach((e) => (e.innerHTML = ""));
-
-          switch (this.id) {
-            case "felidae":
-              Felidae().start();
-              break;
-            case "world":
-              World().start();
-              break;
-          }
-          document.querySelector(`#${this.id}-wrap`).style.display = "block";
-        });
-      });
+      document.querySelector("#felidae-wrap").style.display = "block";
     </script>
   </body>
 </html>

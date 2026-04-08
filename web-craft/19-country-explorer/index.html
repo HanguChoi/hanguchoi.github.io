@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>Country Explorer</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      background: #f0f4f8;
+      font-family: Arial, sans-serif;
+      padding: 24px 16px;
+    }
+
+    h1 { text-align: center; font-size: 1.6rem; margin-bottom: 4px; }
+    .subtitle {
+      text-align: center; font-size: 0.82rem; color: #636e72; margin-bottom: 24px;
+    }
+    .subtitle a { color: #00b7ff; text-decoration: none; }
+
+    /* ---- Search ---- */
+    .search-row {
+      max-width: 500px;
+      margin: 0 auto 24px;
+      display: flex;
+      gap: 10px;
+    }
+    #search-input {
+      flex: 1;
+      padding: 12px 16px;
+      border: 2px solid #dfe6e9;
+      border-radius: 10px;
+      font-size: 1rem;
+      outline: none;
+    }
+    #search-input:focus { border-color: #00b894; }
+    #btn-search {
+      background: #00b894;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 12px 20px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    #btn-search:hover { background: #00a381; }
+    #btn-random {
+      background: #dfe6e9;
+      color: #2d3436;
+      border: none;
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    /* ---- Country grid ---- */
+    .country-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .country-card {
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    }
+
+    .flag-area {
+      height: 160px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f8f9fa;
+      padding: 16px;
+    }
+    .flag-area img {
+      max-height: 120px;
+      max-width: 200px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+    }
+
+    .card-info {
+      padding: 20px;
+    }
+    .card-info h2 {
+      font-size: 1.3rem;
+      margin-bottom: 4px;
+    }
+    .native-name {
+      color: #636e72;
+      font-size: 0.85rem;
+      margin-bottom: 16px;
+    }
+
+    .info-table {
+      width: 100%;
+      font-size: 0.85rem;
+      border-collapse: collapse;
+    }
+    .info-table td {
+      padding: 6px 0;
+      border-bottom: 1px solid #f0f4f8;
+    }
+    .info-table td:first-child {
+      font-weight: bold;
+      color: #636e72;
+      width: 110px;
+    }
+
+    /* Error / loading */
+    #error-msg {
+      text-align: center;
+      color: #d63031;
+      margin-bottom: 16px;
+      display: none;
+    }
+    #loading {
+      text-align: center;
+      color: #b2bec3;
+      padding: 40px;
+      display: none;
+    }
+    #loading.visible { display: block; }
+  </style>
+</head>
+<body>
+<style>
+  .wc-nav { position: fixed; top: 12px; left: 12px; display: flex; gap: 8px; z-index: 1000; }
+  .wc-nav a { background: rgba(0,0,0,0.65); color: white; text-decoration: none; padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-family: Arial, sans-serif; backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.15); }
+  .wc-nav a:hover { background: rgba(0,0,0,0.9); }
+</style>
+<nav class="wc-nav">
+  <a href="/">&#127968; Home</a>
+  <a href="/web-craft/">&#8592; Examples</a>
+</nav>
+
+<h1>Country Explorer</h1>
+<p class="subtitle">
+  Powered by <a href="https://restcountries.com" target="_blank" rel="noopener noreferrer">REST Countries API</a> (free &amp; open, MPL 2.0)
+</p>
+
+<div class="search-row">
+  <input type="text" id="search-input" placeholder="Search by country name…" autocomplete="off">
+  <button id="btn-search">Search</button>
+  <button id="btn-random" title="Random country">🎲</button>
+</div>
+
+<div id="error-msg"></div>
+<div id="loading">Searching…</div>
+
+<div class="country-grid" id="results"></div>
+
+<script>
+  // ---- Fetch countries by name ----
+  // API docs: https://restcountries.com
+  // License: Mozilla Public License 2.0 (open source)
+  async function searchCountry(query) {
+    const resultsEl = document.getElementById('results');
+    const errorEl   = document.getElementById('error-msg');
+    const loadingEl = document.getElementById('loading');
+
+    resultsEl.innerHTML  = '';
+    errorEl.style.display = 'none';
+    loadingEl.classList.add('visible');
+
+    try {
+      const resp = await fetch('https://restcountries.com/v3.1/name/' + encodeURIComponent(query.trim()));
+      if (!resp.ok) throw new Error('Not found');
+      const data = await resp.json();
+      displayCountries(data.slice(0, 6)); // show max 6 results
+    } catch (err) {
+      errorEl.textContent   = 'No countries found. Try a different name.';
+      errorEl.style.display = 'block';
+    } finally {
+      loadingEl.classList.remove('visible');
+    }
+  }
+
+  // ---- Fetch a random country ----
+  async function randomCountry() {
+    const resultsEl = document.getElementById('results');
+    const errorEl   = document.getElementById('error-msg');
+    const loadingEl = document.getElementById('loading');
+
+    resultsEl.innerHTML   = '';
+    errorEl.style.display = 'none';
+    loadingEl.classList.add('visible');
+
+    try {
+      const resp = await fetch('https://restcountries.com/v3.1/all?fields=name');
+      const all  = await resp.json();
+      const pick = all[Math.floor(Math.random() * all.length)];
+      await searchCountry(pick.name.common);
+    } catch (err) {
+      errorEl.textContent   = 'Could not load countries. Check your internet connection.';
+      errorEl.style.display = 'block';
+      loadingEl.classList.remove('visible');
+    }
+  }
+
+  // ---- Display country cards ----
+  function displayCountries(countries) {
+    const resultsEl = document.getElementById('results');
+
+    countries.forEach(function(c) {
+      const nativeName = c.name.nativeName
+        ? Object.values(c.name.nativeName)[0].common
+        : '';
+
+      const languages = c.languages
+        ? Object.values(c.languages).join(', ')
+        : '—';
+
+      const currencies = c.currencies
+        ? Object.values(c.currencies).map(function(cur) { return cur.name + ' (' + cur.symbol + ')'; }).join(', ')
+        : '—';
+
+      const population = c.population
+        ? c.population.toLocaleString()
+        : '—';
+
+      const card = document.createElement('div');
+      card.className = 'country-card';
+      card.innerHTML =
+        '<div class="flag-area"><img src="' + c.flags.svg + '" alt="Flag of ' + escapeHtml(c.name.common) + '"></div>' +
+        '<div class="card-info">' +
+          '<h2>' + escapeHtml(c.name.common) + '</h2>' +
+          '<div class="native-name">' + escapeHtml(nativeName) + '</div>' +
+          '<table class="info-table">' +
+            '<tr><td>Capital</td><td>' + escapeHtml((c.capital || ['—'])[0]) + '</td></tr>' +
+            '<tr><td>Region</td><td>' + escapeHtml(c.region + (c.subregion ? ' — ' + c.subregion : '')) + '</td></tr>' +
+            '<tr><td>Population</td><td>' + population + '</td></tr>' +
+            '<tr><td>Languages</td><td>' + escapeHtml(languages) + '</td></tr>' +
+            '<tr><td>Currencies</td><td>' + escapeHtml(currencies) + '</td></tr>' +
+            '<tr><td>Timezone</td><td>' + escapeHtml((c.timezones || ['—'])[0]) + '</td></tr>' +
+          '</table>' +
+        '</div>';
+      resultsEl.appendChild(card);
+    });
+  }
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  // ---- Events ----
+  document.getElementById('btn-search').addEventListener('click', function() {
+    const val = document.getElementById('search-input').value.trim();
+    if (val) searchCountry(val);
+  });
+
+  document.getElementById('search-input').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      const val = this.value.trim();
+      if (val) searchCountry(val);
+    }
+  });
+
+  document.getElementById('btn-random').addEventListener('click', randomCountry);
+
+  // Start with a random country
+  randomCountry();
+</script>
+
+</body>
+</html>

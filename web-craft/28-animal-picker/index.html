@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>Animal Picker</title>
+  <meta charset="utf-8">
+  <style>
+    body   { font-family: Arial; text-align: center; padding: 60px; background: #f0fff0; }
+    h1     { font-size: 6rem; }
+    button { font-size: 1.1rem; margin: 6px; padding: 10px 22px; cursor: pointer; }
+  </style>
+</head>
+<body>
+
+  <h1 id="animal">🐶</h1>
+  <p id="name" style="font-size:1.5rem">Dog</p>
+
+  <br>
+  <button onclick="pick('🐶', 'Dog')">Dog</button>
+  <button onclick="pick('🐱', 'Cat')">Cat</button>
+  <button onclick="pick('🐼', 'Panda')">Panda</button>
+  <button onclick="pick('🦁', 'Lion')">Lion</button>
+  <button onclick="pick('🐸', 'Frog')">Frog</button>
+  <button onclick="pick('🦊', 'Fox')">Fox</button>
+
+  <script>
+    function pick(emoji, name) {
+      document.getElementById('animal').textContent = emoji;
+      document.getElementById('name').textContent = name;
+    }
+  </script>
+
+</body>
+</html>

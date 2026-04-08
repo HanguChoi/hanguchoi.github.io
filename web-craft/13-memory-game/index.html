@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>Memory Card Game</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(160deg, #cce8f4, #87ceeb, #4fc3f7);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-family: Arial, sans-serif;
+      padding: 24px 16px;
+    }
+
+    h1 {
+      color: #1a3a5c;
+      font-size: 1.6rem;
+      margin-bottom: 4px;
+    }
+
+    /* ---- Stats row ---- */
+    .stats {
+      display: flex;
+      gap: 24px;
+      margin: 12px 0 20px;
+    }
+    .stat {
+      text-align: center;
+      color: #1a3a5c;
+    }
+    .stat-value {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: #0277bd;
+    }
+    #moves  { color: #e17055; }
+    #pairs  { color: #27ae60; }
+    #timer  { color: #8e44ad; }
+    .stat-label {
+      font-size: 0.75rem;
+      color: #4a6a8a;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* ---- Grid ---- */
+    #board {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      max-width: 440px;
+      width: 100%;
+    }
+
+    /* ---- Card (3D flip) ---- */
+    .card-wrap {
+      perspective: 600px;
+      aspect-ratio: 1;
+      cursor: pointer;
+    }
+    .card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      transition: transform 0.45s;
+    }
+    .card-wrap.flipped .card-inner {
+      transform: rotateY(180deg);
+    }
+
+    .card-face {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+    }
+
+    /* Back of card */
+    .card-back {
+      /* background: linear-gradient(135deg, #27ae60, #55efc4); */
+      background: linear-gradient(135deg, #0277bd, #1cd0d9);
+      font-size: 1.5rem;
+    }
+
+    /* Front of card */
+    .card-front {
+      background: white;
+      transform: rotateY(180deg);
+      border: 3px solid transparent;
+      transition: border-color 0.2s;
+    }
+
+    /* Matched cards stay face up and glowing */
+    .card-wrap.matched .card-front {
+      background: #f0fff8;
+      border-color: #00b894;
+    }
+    .card-wrap.matched .card-inner {
+      transform: rotateY(180deg);
+    }
+
+    /* Wrong guess shake */
+    .card-wrap.shake {
+      animation: shake 0.4s ease;
+    }
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      25%      { transform: translateX(-6px); }
+      75%      { transform: translateX( 6px); }
+    }
+
+    /* ---- Buttons ---- */
+    #btn-new {
+      margin-top: 24px;
+      background: #27ae60;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 12px 32px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    #btn-new:hover { background: #1e8449; }
+
+    /* ---- Win message ---- */
+    #win-msg {
+      display: none;
+      margin-top: 20px;
+      background: rgba(255,255,255,0.5);
+      border: 1px solid #0277bd;
+      border-radius: 12px;
+      padding: 16px 32px;
+      text-align: center;
+      color: #1a3a5c;
+    }
+    #win-msg h2 { font-size: 1.4rem; margin-bottom: 4px; color: #01579b; }
+  </style>
+</head>
+<body>
+<style>
+  .wc-nav { position: fixed; top: 12px; left: 12px; display: flex; gap: 8px; z-index: 1000; }
+  .wc-nav a { background: rgba(0,0,0,0.65); color: white; text-decoration: none; padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-family: Arial, sans-serif; backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.15); }
+  .wc-nav a:hover { background: rgba(0,0,0,0.9); }
+</style>
+<nav class="wc-nav">
+  <a href="/">&#127968; Home</a>
+  <a href="/web-craft/">&#8592; Examples</a>
+</nav>
+
+<h1>Memory Game</h1>
+
+<div class="stats">
+  <div class="stat">
+    <div class="stat-value" id="moves">0</div>
+    <div class="stat-label">Moves</div>
+  </div>
+  <div class="stat">
+    <div class="stat-value" id="pairs">0</div>
+    <div class="stat-label">Pairs Found</div>
+  </div>
+  <div class="stat">
+    <div class="stat-value" id="timer">0:00</div>
+    <div class="stat-label">Time</div>
+  </div>
+</div>
+
+<div id="board"></div>
+
+<div id="win-msg">
+  <h2>You Won! 🎉</h2>
+  <p id="win-details"></p>
+</div>
+
+<button id="btn-new">New Game</button>
+
+<script>
+  // The 8 pairs of emojis
+  const EMOJIS = ['🐶','🐱','🐸','🦊','🐼','🦁','🐙','🦋'];
+
+  let cards      = [];  // DOM elements
+  let flipped    = [];  // currently face-up (unmatched)
+  let matched    = 0;
+  let moves      = 0;
+  let locked     = false; // prevent clicking while animating
+  let timerInt   = null;
+  let seconds    = 0;
+  let gameStarted = false;
+
+  // ---- Build the board ----
+  function newGame() {
+    clearInterval(timerInt);
+    seconds = 0;
+    moves   = 0;
+    matched = 0;
+    flipped = [];
+    locked  = false;
+    gameStarted = false;
+
+    document.getElementById('moves').textContent  = '0';
+    document.getElementById('pairs').textContent  = '0';
+    document.getElementById('timer').textContent  = '0:00';
+    document.getElementById('win-msg').style.display = 'none';
+
+    // Make 16 cards (8 pairs), then shuffle
+    const deck = shuffle([...EMOJIS, ...EMOJIS]);
+
+    const board = document.getElementById('board');
+    board.innerHTML = '';
+    cards = [];
+
+    deck.forEach(function(emoji) {
+      const wrap = document.createElement('div');
+      wrap.className = 'card-wrap';
+
+      wrap.innerHTML =
+        '<div class="card-inner">' +
+          '<div class="card-face card-back">?</div>' +
+          '<div class="card-face card-front">' + emoji + '</div>' +
+        '</div>';
+
+      wrap.dataset.emoji = emoji;
+      wrap.addEventListener('click', onCardClick);
+      board.appendChild(wrap);
+      cards.push(wrap);
+    });
+  }
+
+  // ---- Shuffle array (Fisher-Yates) ----
+  function shuffle(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  }
+
+  // ---- Card click ----
+  function onCardClick() {
+    if (locked) return;
+    if (this.classList.contains('flipped'))  return;
+    if (this.classList.contains('matched'))  return;
+
+    // Start timer on first flip
+    if (!gameStarted) {
+      gameStarted = true;
+      timerInt = setInterval(function() {
+        seconds++;
+        const m = Math.floor(seconds / 60);
+        const s = String(seconds % 60).padStart(2, '0');
+        document.getElementById('timer').textContent = m + ':' + s;
+      }, 1000);
+    }
+
+    this.classList.add('flipped');
+    flipped.push(this);
+
+    if (flipped.length === 2) {
+      moves++;
+      document.getElementById('moves').textContent = moves;
+      locked = true; // lock until we resolve the pair
+
+      if (flipped[0].dataset.emoji === flipped[1].dataset.emoji) {
+        // Match!
+        flipped.forEach(c => c.classList.add('matched'));
+        matched++;
+        document.getElementById('pairs').textContent = matched;
+        flipped = [];
+        locked  = false;
+
+        if (matched === EMOJIS.length) {
+          clearInterval(timerInt);
+          setTimeout(showWin, 300);
+        }
+      } else {
+        // No match — flip back after delay
+        setTimeout(function() {
+          flipped.forEach(c => {
+            c.classList.remove('flipped');
+            c.classList.add('shake');
+            setTimeout(function() { c.classList.remove('shake'); }, 400);
+          });
+          flipped = [];
+          locked  = false;
+        }, 900);
+      }
+    }
+  }
+
+  function showWin() {
+    const msg = document.getElementById('win-msg');
+    const m = Math.floor(seconds / 60);
+    const s = String(seconds % 60).padStart(2, '0');
+    document.getElementById('win-details').textContent =
+      moves + ' moves in ' + m + ':' + s;
+    msg.style.display = 'block';
+  }
+
+  document.getElementById('btn-new').addEventListener('click', newGame);
+
+  newGame();
+</script>
+
+</body>
+</html>

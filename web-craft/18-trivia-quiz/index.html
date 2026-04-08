@@ -1,0 +1,492 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>Bible Quiz</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0d8fb5, #24bff3);
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 32px 16px;
+      font-family: Arial, sans-serif;
+    }
+
+    .app {
+      max-width: 540px;
+      width: 100%;
+    }
+
+    h1 {
+      text-align: center;
+      color: white;
+      font-size: 1.8rem;
+      margin-bottom: 4px;
+    }
+    .subtitle {
+      text-align: center;
+      color: rgba(255,255,255,0.65);
+      font-size: 0.85rem;
+      margin-bottom: 28px;
+    }
+
+    /* ---- Start screen ---- */
+    .start-screen {
+      background: white;
+      border-radius: 16px;
+      padding: 32px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+      text-align: center;
+    }
+    .start-screen .cross { font-size: 3rem; margin-bottom: 12px; }
+    .start-screen h2 { font-size: 1.3rem; margin-bottom: 8px; color: #2d3436; }
+    .start-screen p { font-size: 0.9rem; color: #636e72; margin-bottom: 24px; line-height: 1.6; }
+
+    .form-row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 16px;
+      justify-content: center;
+    }
+    .form-row label { font-size: 0.9rem; font-weight: bold; color: #636e72; }
+    .form-row select {
+      padding: 8px 14px;
+      border: 1px solid #dfe6e9;
+      border-radius: 8px;
+      font-size: 0.9rem;
+    }
+
+    #btn-start {
+      width: 100%;
+      background: #0d8fb5;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 14px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    #btn-start:hover { background: #0d2137; }
+
+    /* ---- Question card ---- */
+    .question-card {
+      background: white;
+      border-radius: 16px;
+      padding: 28px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+      display: none;
+    }
+    .question-card.visible { display: block; }
+
+    .progress {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      font-size: 0.82rem;
+      color: #b2bec3;
+    }
+    .progress-bar {
+      width: 100%;
+      height: 6px;
+      background: #f0f4f8;
+      border-radius: 3px;
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: #24bff3;
+      border-radius: 3px;
+      transition: width 0.3s;
+    }
+
+    .section-tag {
+      display: inline-block;
+      background: #e0f7fd;
+      color: #0d8fb5;
+      padding: 4px 12px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: bold;
+      margin-bottom: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .question-text {
+      font-size: 1.15rem;
+      color: #2d3436;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    .answers { display: flex; flex-direction: column; gap: 10px; }
+    .answer-btn {
+      background: #f8f9fa;
+      border: 2px solid #dfe6e9;
+      border-radius: 10px;
+      padding: 14px 16px;
+      font-size: 0.95rem;
+      text-align: left;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .answer-btn:hover   { border-color: #24bff3; background: #e0f7fd; }
+    .answer-btn.correct { border-color: #00b894; background: #e6fff5; }
+    .answer-btn.wrong   { border-color: #d63031; background: #fff0f0; }
+    .answer-btn:disabled { cursor: default; opacity: 0.85; }
+
+    #btn-next-q {
+      margin-top: 16px;
+      background: #0d8fb5;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 12px 28px;
+      font-size: 1rem;
+      cursor: pointer;
+      display: none;
+    }
+    #btn-next-q.visible { display: inline-block; }
+
+    /* ---- Results ---- */
+    .results {
+      background: white;
+      border-radius: 16px;
+      padding: 32px;
+      text-align: center;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+      display: none;
+    }
+    .results.visible { display: block; }
+    .results .big { font-size: 3rem; font-weight: bold; color: #0d8fb5; }
+    .results p { margin-top: 8px; color: #636e72; line-height: 1.6; }
+    .results .emoji { font-size: 4rem; display: block; margin-bottom: 12px; }
+    #btn-again {
+      margin-top: 20px;
+      background: #0d8fb5;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 12px 28px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+<style>
+  .wc-nav { position: fixed; top: 12px; left: 12px; display: flex; gap: 8px; z-index: 1000; }
+  .wc-nav a { background: rgba(0,0,0,0.65); color: white; text-decoration: none; padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-family: Arial, sans-serif; backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.15); }
+  .wc-nav a:hover { background: rgba(0,0,0,0.9); }
+</style>
+<nav class="wc-nav">
+  <a href="/">&#127968; Home</a>
+  <a href="/web-craft/">&#8592; Examples</a>
+</nav>
+
+<div class="app">
+  <h1>✝️ Bible Quiz</h1>
+  <p class="subtitle">Test your knowledge of the Old &amp; New Testament</p>
+
+  <!-- Start screen -->
+  <div class="start-screen" id="start-screen">
+    <div class="cross">📖</div>
+    <h2>How well do you know the Bible?</h2>
+    <p>Questions cover the Old Testament, New Testament, the life of Jesus, and more.</p>
+    <div class="form-row">
+      <label>Questions:</label>
+      <select id="amount">
+        <option value="5">5</option>
+        <option value="10" selected>10</option>
+        <option value="20">20</option>
+        <option value="all">All</option>
+      </select>
+    </div>
+    <button id="btn-start">Start Quiz</button>
+  </div>
+
+  <!-- Question screen -->
+  <div class="question-card" id="question-card">
+    <div class="progress">
+      <span id="q-counter">Question 1 / 10</span>
+      <span id="q-score">Score: 0</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+    <div class="section-tag" id="q-section"></div>
+    <div class="question-text" id="q-text"></div>
+    <div class="answers" id="answers"></div>
+    <button id="btn-next-q">Next Question →</button>
+  </div>
+
+  <!-- Results screen -->
+  <div class="results" id="results">
+    <span class="emoji" id="r-emoji"></span>
+    <div class="big" id="r-score"></div>
+    <p id="r-msg"></p>
+    <button id="btn-again">Try Again</button>
+  </div>
+</div>
+
+<script>
+  // ================================================================
+  //  Bible Quiz Questions
+  //  Format: { section, question, correct, wrong: [3 wrong answers] }
+  //  Add your own questions to this array!
+  // ================================================================
+  const ALL_QUESTIONS = [
+    // ---- Creation & Genesis ----
+    { section: 'Creation',
+      question: 'How many days did God take to create the world?',
+      correct: '6 days',
+      wrong: ['3 days', '7 days', '10 days'] },
+    { section: 'Genesis',
+      question: 'Who built the ark?',
+      correct: 'Noah',
+      wrong: ['Moses', 'Abraham', 'David'] },
+    { section: 'Genesis',
+      question: 'What was the name of the garden where Adam and Eve lived?',
+      correct: 'Garden of Eden',
+      wrong: ['Garden of Gethsemane', 'Garden of Olives', 'Garden of Paradise'] },
+    { section: 'Genesis',
+      question: 'How many sons did Jacob have?',
+      correct: '12',
+      wrong: ['10', '7', '14'] },
+    { section: 'Genesis',
+      question: 'Who was sold into slavery by his brothers?',
+      correct: 'Joseph',
+      wrong: ['Benjamin', 'Judah', 'Reuben'] },
+
+    // ---- Old Testament ----
+    { section: 'Old Testament',
+      question: 'Who was swallowed by a large fish?',
+      correct: 'Jonah',
+      wrong: ['Elijah', 'Isaiah', 'Ezekiel'] },
+    { section: 'Old Testament',
+      question: 'What did God give Moses on Mount Sinai?',
+      correct: 'The Ten Commandments',
+      wrong: ['The Book of Psalms', 'The Ark of the Covenant', 'The Torah'] },
+    { section: 'Old Testament',
+      question: 'Who was the first king of Israel?',
+      correct: 'Saul',
+      wrong: ['David', 'Solomon', 'Samson'] },
+    { section: 'Old Testament',
+      question: 'How many plagues did God send on Egypt?',
+      correct: '10',
+      wrong: ['7', '12', '5'] },
+    { section: 'Old Testament',
+      question: 'Who was the strongest man in the Bible?',
+      correct: 'Samson',
+      wrong: ['Goliath', 'David', 'Solomon'] },
+    { section: 'Old Testament',
+      question: 'Which river did Moses part for the Israelites to cross?',
+      correct: 'The Red Sea',
+      wrong: ['The Jordan River', 'The Nile River', 'The Euphrates River'] },
+    { section: 'Old Testament',
+      question: 'How many days and nights did it rain during Noah\'s flood?',
+      correct: '40',
+      wrong: ['7', '100', '20'] },
+    { section: 'Old Testament',
+      question: 'David killed Goliath with which weapon?',
+      correct: 'A sling and a stone',
+      wrong: ['A sword', 'A spear', 'An arrow'] },
+    { section: 'Old Testament',
+      question: 'Who was the wisest king of Israel?',
+      correct: 'Solomon',
+      wrong: ['David', 'Saul', 'Hezekiah'] },
+    { section: 'Old Testament',
+      question: 'Which prophet was taken to heaven in a chariot of fire?',
+      correct: 'Elijah',
+      wrong: ['Elisha', 'Isaiah', 'Ezekiel'] },
+
+    // ---- The Bible ----
+    { section: 'The Bible',
+      question: 'What is the first book of the Bible?',
+      correct: 'Genesis',
+      wrong: ['Exodus', 'Psalms', 'Matthew'] },
+    { section: 'The Bible',
+      question: 'What is the last book of the Bible?',
+      correct: 'Revelation',
+      wrong: ['Malachi', 'Jude', 'Acts'] },
+    { section: 'The Bible',
+      question: 'How many books are in the Bible?',
+      correct: '66',
+      wrong: ['39', '72', '54'] },
+    { section: 'The Bible',
+      question: 'What is the shortest verse in the Bible?',
+      correct: '"Jesus wept." (John 11:35)',
+      wrong: ['"Amen." (Revelation 22:21)', '"Rejoice always." (1 Thess. 5:16)', '"Pray continually." (1 Thess. 5:17)'] },
+    { section: 'The Bible',
+      question: 'How many books are in the Old Testament?',
+      correct: '39',
+      wrong: ['27', '33', '46'] },
+
+    // ---- Life of Jesus ----
+    { section: 'Life of Jesus',
+      question: 'What city was Jesus born in?',
+      correct: 'Bethlehem',
+      wrong: ['Nazareth', 'Jerusalem', 'Jericho'] },
+    { section: 'Life of Jesus',
+      question: 'What was the first miracle Jesus performed?',
+      correct: 'Turning water into wine',
+      wrong: ['Healing a blind man', 'Walking on water', 'Feeding 5,000 people'] },
+    { section: 'Life of Jesus',
+      question: 'How many disciples did Jesus have?',
+      correct: '12',
+      wrong: ['7', '10', '14'] },
+    { section: 'Life of Jesus',
+      question: 'In which river was Jesus baptized?',
+      correct: 'The Jordan River',
+      wrong: ['The Nile', 'The Sea of Galilee', 'The Dead Sea'] },
+    { section: 'Life of Jesus',
+      question: 'What did Jesus feed 5,000 people with?',
+      correct: '5 loaves of bread and 2 fish',
+      wrong: ['7 loaves and 3 fish', '10 loaves and 5 fish', '3 loaves and 1 fish'] },
+    { section: 'Life of Jesus',
+      question: 'Who betrayed Jesus?',
+      correct: 'Judas Iscariot',
+      wrong: ['Peter', 'Thomas', 'Bartholomew'] },
+    { section: 'Life of Jesus',
+      question: 'How many days was Jesus in the tomb before rising?',
+      correct: '3 days',
+      wrong: ['1 day', '7 days', '2 days'] },
+    { section: 'Life of Jesus',
+      question: 'Who was the mother of Jesus?',
+      correct: 'Mary',
+      wrong: ['Martha', 'Elizabeth', 'Salome'] },
+    { section: 'Life of Jesus',
+      question: 'On which mountain did Jesus give the Sermon on the Mount?',
+      correct: 'The Mount of Beatitudes',
+      wrong: ['Mount Sinai', 'Mount Zion', 'Mount Carmel'] },
+    { section: 'Life of Jesus',
+      question: 'Who baptized Jesus?',
+      correct: 'John the Baptist',
+      wrong: ['Peter', 'Andrew', 'James'] },
+
+    // ---- New Testament ----
+    { section: 'New Testament',
+      question: 'Who wrote most of the letters (epistles) in the New Testament?',
+      correct: 'Paul',
+      wrong: ['Peter', 'John', 'Luke'] },
+    { section: 'New Testament',
+      question: 'What is the first book of the New Testament?',
+      correct: 'Matthew',
+      wrong: ['Mark', 'Luke', 'John'] },
+    { section: 'New Testament',
+      question: 'Which disciple denied Jesus three times?',
+      correct: 'Peter',
+      wrong: ['John', 'Thomas', 'Andrew'] },
+    { section: 'New Testament',
+      question: 'What happened on the Day of Pentecost?',
+      correct: 'The Holy Spirit came upon the disciples',
+      wrong: ['Jesus rose from the dead', 'Jesus ascended to heaven', 'Jesus was baptized'] },
+    { section: 'New Testament',
+      question: 'Which disciple doubted Jesus\'s resurrection until he saw the wounds?',
+      correct: 'Thomas',
+      wrong: ['Philip', 'Bartholomew', 'Matthew'] },
+  ];
+
+  // ----------------------------------------------------------------
+  let questions = [];
+  let current   = 0;
+  let score     = 0;
+
+  function shuffle(arr) {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  function startQuiz() {
+    const amountVal = document.getElementById('amount').value;
+    const pool      = shuffle(ALL_QUESTIONS);
+    questions = amountVal === 'all' ? pool : pool.slice(0, parseInt(amountVal));
+    current   = 0;
+    score     = 0;
+
+    document.getElementById('start-screen').style.display = 'none';
+    document.getElementById('results').classList.remove('visible');
+    document.getElementById('question-card').classList.add('visible');
+    showQuestion();
+  }
+
+  function showQuestion() {
+    const q     = questions[current];
+    const total = questions.length;
+
+    document.getElementById('q-counter').textContent      = 'Question ' + (current + 1) + ' / ' + total;
+    document.getElementById('q-score').textContent        = 'Score: ' + score;
+    document.getElementById('progress-fill').style.width  = ((current / total) * 100) + '%';
+    document.getElementById('q-section').textContent      = q.section;
+    document.getElementById('q-text').textContent         = q.question;
+
+    const answers   = shuffle([q.correct, ...q.wrong]);
+    const answersEl = document.getElementById('answers');
+    answersEl.innerHTML = '';
+
+    answers.forEach(function(ans) {
+      const btn = document.createElement('button');
+      btn.className   = 'answer-btn';
+      btn.textContent = ans;
+      btn.addEventListener('click', function() { checkAnswer(ans, q.correct); });
+      answersEl.appendChild(btn);
+    });
+
+    document.getElementById('btn-next-q').classList.remove('visible');
+  }
+
+  function checkAnswer(selected, correct) {
+    document.querySelectorAll('.answer-btn').forEach(function(btn) {
+      btn.disabled = true;
+      if (btn.textContent === correct)                        btn.classList.add('correct');
+      else if (btn.textContent === selected && selected !== correct) btn.classList.add('wrong');
+    });
+
+    if (selected === correct) score++;
+    document.getElementById('q-score').textContent = 'Score: ' + score;
+    document.getElementById('btn-next-q').classList.add('visible');
+  }
+
+  document.getElementById('btn-next-q').addEventListener('click', function() {
+    current++;
+    if (current < questions.length) { showQuestion(); }
+    else { showResults(); }
+  });
+
+  function showResults() {
+    document.getElementById('question-card').classList.remove('visible');
+    document.getElementById('results').classList.add('visible');
+
+    const pct = Math.round((score / questions.length) * 100);
+    document.getElementById('r-score').textContent = score + ' / ' + questions.length;
+
+    let emoji, msg;
+    if (pct === 100)    { emoji = '🏆'; msg = 'Perfect score! You really know your Bible!'; }
+    else if (pct >= 80) { emoji = '🌟'; msg = 'Great job! Keep reading the Word!'; }
+    else if (pct >= 60) { emoji = '👍'; msg = 'Good effort! A little more study and you\'ll ace it.'; }
+    else if (pct >= 40) { emoji = '📖'; msg = 'Keep reading the Bible — you\'ll get there!'; }
+    else                { emoji = '🙏'; msg = 'Don\'t give up! Every reading makes you stronger.'; }
+
+    document.getElementById('r-emoji').textContent = emoji;
+    document.getElementById('r-msg').textContent   = msg;
+  }
+
+  document.getElementById('btn-start').addEventListener('click', startQuiz);
+  document.getElementById('btn-again').addEventListener('click', function() {
+    document.getElementById('results').classList.remove('visible');
+    document.getElementById('start-screen').style.display = 'block';
+  });
+</script>
+
+</body>
+</html>

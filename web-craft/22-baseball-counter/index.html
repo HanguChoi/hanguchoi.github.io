@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>Baseball Counter</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: radial-gradient(ellipse at center, #3d7a33 0%, #1e3d19 100%);
+      font-family: Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      padding: 80px 20px 20px;
+    }
+
+    h1 {
+      color: #ffeaa7;
+      font-size: 2.2rem;
+      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+    }
+
+    /* The scoreboard panel */
+    .board {
+      background: rgba(0, 0, 0, 0.75);
+      border-radius: 20px;
+      padding: 36px 48px;
+      display: flex;
+      gap: 48px;
+      align-items: center;
+    }
+
+    .counter-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .label {
+      color: #aaa;
+      font-size: 0.8rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+    }
+
+    .count-num {
+      font-size: 4.5rem;
+      font-weight: 900;
+      color: white;
+      min-width: 80px;
+      text-align: center;
+      line-height: 1;
+    }
+
+    /* Yellow dots showing current count */
+    .dots {
+      display: flex;
+      gap: 8px;
+    }
+
+    .dot {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 2px solid #555;
+      background: transparent;
+      transition: background 0.25s, border-color 0.25s;
+    }
+    .dot.on {
+      background: #ffd32a;
+      border-color: #ffd32a;
+    }
+
+    /* Message banner that pops up */
+    .message {
+      font-size: 1.4rem;
+      font-weight: 700;
+      padding: 14px 36px;
+      border-radius: 30px;
+      min-width: 300px;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.3s, transform 0.3s;
+      background: #e74c3c;
+      color: white;
+    }
+    .message.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .message.blue  { background: #0652DD; }
+    .message.green { background: #27ae60; }
+
+    /* Action buttons */
+    .buttons {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .btn {
+      padding: 16px 30px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      font-family: inherit;
+      border: none;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: transform 0.14s, opacity 0.14s;
+    }
+    .btn:hover  { transform: scale(1.06); }
+    .btn:active { transform: scale(0.94); opacity: 0.8; }
+
+    .btn-ball   { background: #0652DD; color: white; }
+    .btn-strike { background: #e74c3c; color: white; }
+    .btn-hit    { background: #27ae60; color: white; }
+    .btn-reset  { background: #2d2d2d; color: #aaa; font-size: 0.9rem; padding: 12px 24px; }
+  </style>
+</head>
+<body>
+
+<style>
+  .wc-nav { position: fixed; top: 12px; left: 12px; display: flex; gap: 8px; z-index: 1000; }
+  .wc-nav a { background: rgba(0,0,0,0.65); color: white; text-decoration: none; padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-family: Arial, sans-serif; backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.15); }
+  .wc-nav a:hover { background: rgba(0,0,0,0.9); }
+</style>
+<nav class="wc-nav">
+  <a href="/">&#127968; Home</a>
+  <a href="/web-craft/">&#8592; Examples</a>
+</nav>
+
+<h1>⚾ Baseball Counter</h1>
+
+<div class="board">
+
+  <div class="counter-group">
+    <div class="label">Balls</div>
+    <div class="count-num" id="balls">0</div>
+    <div class="dots">
+      <div class="dot" id="b1"></div>
+      <div class="dot" id="b2"></div>
+      <div class="dot" id="b3"></div>
+    </div>
+  </div>
+
+  <div class="counter-group">
+    <div class="label">Strikes</div>
+    <div class="count-num" id="strikes">0</div>
+    <div class="dots">
+      <div class="dot" id="s1"></div>
+      <div class="dot" id="s2"></div>
+    </div>
+  </div>
+
+  <div class="counter-group">
+    <div class="label">Outs</div>
+    <div class="count-num" id="outs">0</div>
+    <div class="dots">
+      <div class="dot" id="o1"></div>
+      <div class="dot" id="o2"></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="message" id="message">Play ball! ⚾</div>
+
+<div class="buttons">
+  <button class="btn btn-ball"   onclick="addBall()">Ball</button>
+  <button class="btn btn-strike" onclick="addStrike()">Strike</button>
+  <button class="btn btn-hit"    onclick="hit()">Hit! 🏃</button>
+  <button class="btn btn-reset"  onclick="newGame()">New Game</button>
+</div>
+
+<script>
+  let balls = 0;
+  let strikes = 0;
+  let outs = 0;
+
+  // Update all dot indicators and number displays
+  function render() {
+    document.getElementById('balls').textContent   = balls;
+    document.getElementById('strikes').textContent = strikes;
+    document.getElementById('outs').textContent    = outs;
+
+    for (let i = 1; i <= 3; i++) {
+      document.getElementById('b' + i).className = i <= balls   ? 'dot on' : 'dot';
+    }
+    for (let i = 1; i <= 2; i++) {
+      document.getElementById('s' + i).className = i <= strikes ? 'dot on' : 'dot';
+    }
+    for (let i = 1; i <= 2; i++) {
+      document.getElementById('o' + i).className = i <= outs    ? 'dot on' : 'dot';
+    }
+  }
+
+  function flash(text, colorClass) {
+    const msg = document.getElementById('message');
+    msg.textContent = text;
+    msg.className = 'message show ' + colorClass;
+    setTimeout(() => { msg.className = 'message'; }, 2000);
+  }
+
+  function addBall() {
+    balls++;
+    if (balls >= 4) {
+      flash('🚶 WALK! Batter goes to first!', 'blue');
+      balls = 0;
+      strikes = 0;
+    }
+    render();
+  }
+
+  function addStrike() {
+    strikes++;
+    if (strikes >= 3) {
+      outs++;
+      strikes = 0;
+      balls = 0;
+      if (outs >= 3) {
+        flash('🔔 INNING OVER! — 3 outs!', '');
+        setTimeout(() => { outs = 0; render(); }, 2100);
+      } else {
+        flash('⚡ STRIKEOUT! Out #' + outs, '');
+      }
+    }
+    render();
+  }
+
+  function hit() {
+    flash('💥 HIT! Batter runs the bases!', 'green');
+    balls = 0;
+    strikes = 0;
+    render();
+  }
+
+  function newGame() {
+    balls = 0; strikes = 0; outs = 0;
+    render();
+    flash('⚾ New game — play ball!', 'green');
+  }
+
+  render();
+</script>
+
+</body>
+</html>

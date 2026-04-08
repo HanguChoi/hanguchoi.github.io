@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>Bible Verse</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Google Fonts (commented out — uncomment to use web fonts)
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Oooh+Baby&display=swap" rel="stylesheet">
+  -->
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ---- Built-in fonts — no download needed ----
+       serif:      Georgia, "Times New Roman"
+       sans-serif: Arial, Helvetica
+       monospace:  "Courier New"
+       cursive:    cursive  (looks handwritten)
+       fantasy:    fantasy
+    */
+    body {
+      background: white;
+      font-family: 'Times New Roman', serif;   /* try: cursive  |  "Times New Roman"  |  Arial */
+    }
+
+    /* ---- Verse section ---- */
+    .verse-section {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 80px 40px 60px;
+      text-align: center;
+    }
+
+    /* Big decorative opening quote mark */
+    .open-quote {
+      font-size: 8rem;
+      line-height: 0.6;
+      color: #e0e0e0;
+      display: block;
+      margin-bottom: 24px;
+      font-style: normal;
+    }
+
+    /* The verse text */
+    #verse-text {
+      font-size: 1.9rem;
+      font-style: italic;
+      color: #222;
+      line-height: 1.75;
+      margin-bottom: 28px;
+    }
+
+    /* The reference — e.g. "— John 3:16" */
+    #verse-ref {
+      font-size: 1rem;
+      font-style: italic;
+      font-weight: 400;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+
+    /* ---- Photo section ---- */
+    .photo-wrap {
+      position: relative;
+      width: 100%;
+    }
+
+    .photo-section {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* Unsplash attribution — bottom-right corner over the photo */
+    .photo-credit {
+      position: absolute;
+      bottom: 12px;
+      right: 14px;
+      font-family: Arial, sans-serif;
+      font-size: 0.72rem;
+      color: rgba(255,255,255,0.75);
+    }
+    .photo-credit a {
+      color: rgba(255,255,255,0.9);
+      text-decoration: underline;
+    }
+    .photo-credit a:hover { color: white; }
+  </style>
+</head>
+<body>
+<style>
+  .wc-nav { position: fixed; top: 12px; left: 12px; display: flex; gap: 8px; z-index: 1000; }
+  .wc-nav a { background: rgba(0,0,0,0.65); color: white; text-decoration: none; padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-family: Arial, sans-serif; backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.15); }
+  .wc-nav a:hover { background: rgba(0,0,0,0.9); }
+</style>
+<nav class="wc-nav">
+  <a href="/">&#127968; Home</a>
+  <a href="/web-craft/">&#8592; Examples</a>
+</nav>
+
+  <div class="verse-section">
+    <span class="open-quote">&ldquo;</span>
+    <p id="verse-text">The Lord is my shepherd; I shall not want.</p>
+    <p id="verse-ref">— Psalm 23:1</p>
+  </div>
+
+  <!-- Big photo at the bottom -->
+  <div class="photo-wrap">
+    <img class="photo-section" src="images/twelve_apostles.jpg" alt="Twelve Apostles, Great Ocean Road">
+    <p class="photo-credit">
+      Photo by <a href="https://unsplash.com/@victor_g?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" target="_blank" rel="noopener noreferrer">Victor</a>
+      on <a href="https://unsplash.com/s/photos/great-ocean-road?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" target="_blank" rel="noopener noreferrer">Unsplash</a>
+    </p>
+  </div>
+
+  <footer style="padding: 24px 40px; text-align: center; font-family: Arial, sans-serif; font-size: 0.8rem; color: #aaa; border-top: 1px solid #eee;">
+    Find web fonts:
+    <a href="https://fonts.google.com" target="_blank" rel="noopener noreferrer" style="color:#888; margin: 0 8px;">Google Fonts</a>
+    <a href="https://www.fontsquirrel.com" target="_blank" rel="noopener noreferrer" style="color:#888; margin: 0 8px;">Font Squirrel</a>
+    <a href="https://www.dafont.com" target="_blank" rel="noopener noreferrer" style="color:#888; margin: 0 8px;">DaFont</a>
+    <a href="https://fonts.adobe.com" target="_blank" rel="noopener noreferrer" style="color:#888; margin: 0 8px;">Adobe Fonts</a>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,520 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>HTML Structure — Web Craft</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #f0f4f8;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      color: #222;
+    }
+
+    header {
+      background: #00b7ff;
+      color: white;
+      padding: 36px 24px;
+      text-align: center;
+    }
+    header h1 { font-size: 2.2rem; margin-bottom: 8px; }
+    header p  { font-size: 1.1rem; opacity: 0.9; }
+
+    .page { max-width: 860px; margin: 0 auto; padding: 40px 24px 60px; }
+
+    /* ---- Section heading ---- */
+    .section-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin: 40px 0 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .step-badge {
+      background: #00b7ff;
+      color: white;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    p.explain {
+      color: #444;
+      line-height: 1.7;
+      margin-bottom: 16px;
+    }
+
+    /* ---- Color-coded anatomy block ---- */
+    .anatomy {
+      border-radius: 14px;
+      overflow: hidden;
+      font-family: 'Courier New', monospace;
+      font-size: 0.92rem;
+      line-height: 1.7;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      margin-bottom: 8px;
+    }
+
+    .anatomy .line { padding: 2px 20px; }
+
+    .bg-html   { background: #2d3436; color: #dfe6e9; }
+    .bg-head   { background: #0d4f72; color: #74b9ff; }
+    .bg-style  { background: #3d2b6e; color: #a29bfe; }
+    .bg-body   { background: #1c4a1c; color: #55efc4; }
+    .bg-script { background: #5c2d0a; color: #fdcb6e; }
+
+    .tag-name  { font-weight: 700; }
+    .tag-gray  { color: #888; }
+
+    /* ---- Legend pills ---- */
+    .legend {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+    .pill {
+      padding: 5px 14px;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: white;
+    }
+    .pill-html   { background: #636e72; }
+    .pill-head   { background: #0652DD; }
+    .pill-style  { background: #6c5ce7; }
+    .pill-body   { background: #00b894; }
+    .pill-script { background: #e67e22; }
+
+    /* ---- CodePen → GitHub diagram ---- */
+    .codepen-diagram {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      margin: 20px 0;
+    }
+
+    .cp-panel {
+      flex: 1;
+      min-width: 160px;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+    }
+
+    .cp-header {
+      padding: 10px 16px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      letter-spacing: 1px;
+      color: white;
+    }
+
+    .cp-content {
+      padding: 14px 16px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.8rem;
+      line-height: 1.6;
+    }
+
+    .cp-html   .cp-header  { background: #2d3436; }
+    .cp-html   .cp-content { background: #3d4852; color: #55efc4; }
+    .cp-css    .cp-header  { background: #3d2b6e; }
+    .cp-css    .cp-content { background: #4d3b7e; color: #a29bfe; }
+    .cp-js     .cp-header  { background: #5c2d0a; }
+    .cp-js     .cp-content { background: #6c3d1a; color: #fdcb6e; }
+
+    .arrow-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      padding-top: 30px;
+      color: #00b7ff;
+      font-weight: 700;
+    }
+
+    /* ---- Step cards ---- */
+    .steps {
+      counter-reset: step-counter;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .step {
+      background: white;
+      border-radius: 12px;
+      padding: 16px 20px;
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+    .step-num {
+      background: #00b7ff;
+      color: white;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .step-text { line-height: 1.6; color: #333; }
+    .step-text code {
+      background: #f0f4f8;
+      padding: 1px 7px;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.88em;
+      color: #6c5ce7;
+    }
+
+    /* ---- Template code box ---- */
+    .template-box {
+      background: #1e1e2e;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    }
+
+    .template-header {
+      background: #2d2d4e;
+      padding: 12px 20px;
+      color: #aaa;
+      font-size: 0.85rem;
+      font-family: 'Courier New', monospace;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .copy-hint {
+      font-size: 0.75rem;
+      color: #aaa;
+    }
+
+    .template-code {
+      padding: 24px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.88rem;
+      line-height: 1.75;
+      color: #cdd6f4;
+      overflow-x: auto;
+    }
+
+    .c-gray   { color: #6c7086; }
+    .c-tag    { color: #89b4fa; }
+    .c-attr   { color: #cba6f7; }
+    .c-str    { color: #a6e3a1; }
+    .c-purple { color: #cba6f7; }
+    .c-yellow { color: #f9e2af; }
+    .c-comment{ color: #45475a; }
+
+    /* ---- Info boxes ---- */
+    .info-box {
+      border-left: 4px solid #00b7ff;
+      background: white;
+      border-radius: 0 12px 12px 0;
+      padding: 16px 20px;
+      margin: 20px 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .info-box.tip { border-color: #00b894; }
+    .info-box strong { color: #00b7ff; }
+    .info-box.tip strong { color: #00b894; }
+
+    footer { text-align: center; padding: 32px; color: #aaa; font-size: 0.85rem; }
+  </style>
+</head>
+<body>
+
+<style>
+  .wc-nav { position: fixed; top: 12px; left: 12px; display: flex; gap: 8px; z-index: 1000; }
+  .wc-nav a { background: rgba(0,0,0,0.65); color: white; text-decoration: none; padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-family: Arial, sans-serif; backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.15); }
+  .wc-nav a:hover { background: rgba(0,0,0,0.9); }
+</style>
+<nav class="wc-nav">
+  <a href="/">&#127968; Home</a>
+  <a href="/web-craft/">&#8592; Examples</a>
+</nav>
+
+<header>
+  <h1>📄 How HTML Files Work</h1>
+  <p>Understand the structure — then move your code from CodePen to GitHub!</p>
+</header>
+
+<div class="page">
+
+  <!-- ============================================================ -->
+  <div class="section-title">
+    <span class="step-badge">1</span>
+    The Three Parts of Every Webpage
+  </div>
+
+  <p class="explain">
+    Every webpage is built from three ingredients. Think of them like a house:
+    HTML is the <strong>walls &amp; rooms</strong>, CSS is the <strong>paint &amp; furniture</strong>,
+    and JavaScript is the <strong>electricity &amp; doors that open</strong>.
+  </p>
+
+  <div class="legend">
+    <span class="pill pill-html">HTML — Structure</span>
+    <span class="pill pill-style">CSS — Style</span>
+    <span class="pill pill-script">JavaScript — Behavior</span>
+  </div>
+
+  <!-- ============================================================ -->
+  <div class="section-title">
+    <span class="step-badge">2</span>
+    The Anatomy of an HTML File
+  </div>
+
+  <p class="explain">
+    A complete HTML file has a specific structure. Every section has a job:
+  </p>
+
+  <div class="anatomy">
+    <div class="line bg-html"><span class="tag-gray">&lt;!-- The file always starts here --&gt;</span></div>
+    <div class="line bg-html"><span class="tag-name">&lt;!doctype html&gt;</span></div>
+    <div class="line bg-html"><span class="tag-name">&lt;html&gt;</span></div>
+    <div class="line bg-html">&nbsp;</div>
+
+    <div class="line bg-head"><span class="tag-gray">&nbsp;&nbsp;&lt;!-- HEAD: browser settings, title, and CSS --&gt;</span></div>
+    <div class="line bg-head"><span class="tag-name">&nbsp;&nbsp;&lt;head&gt;</span></div>
+    <div class="line bg-head">&nbsp;&nbsp;&nbsp;&nbsp;&lt;title&gt;My Page Title&lt;/title&gt;</div>
+    <div class="line bg-head">&nbsp;&nbsp;&nbsp;&nbsp;&lt;meta charset="utf-8"&gt;</div>
+
+    <div class="line bg-style"><span class="tag-gray">&nbsp;&nbsp;&nbsp;&nbsp;&lt;!-- CSS goes here, inside &lt;style&gt; --&gt;</span></div>
+    <div class="line bg-style">&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag-name">&lt;style&gt;</span></div>
+    <div class="line bg-style">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;body { background: blue; }</div>
+    <div class="line bg-style">&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag-name">&lt;/style&gt;</span></div>
+
+    <div class="line bg-head">&nbsp;&nbsp;<span class="tag-name">&lt;/head&gt;</span></div>
+    <div class="line bg-html">&nbsp;</div>
+
+    <div class="line bg-body"><span class="tag-gray">&nbsp;&nbsp;&lt;!-- BODY: everything the user sees --&gt;</span></div>
+    <div class="line bg-body"><span class="tag-name">&nbsp;&nbsp;&lt;body&gt;</span></div>
+    <div class="line bg-body">&nbsp;&nbsp;&nbsp;&nbsp;&lt;h1&gt;Hello World!&lt;/h1&gt;</div>
+    <div class="line bg-body">&nbsp;&nbsp;&nbsp;&nbsp;&lt;button&gt;Click me&lt;/button&gt;</div>
+
+    <div class="line bg-script"><span class="tag-gray">&nbsp;&nbsp;&nbsp;&nbsp;&lt;!-- JS goes here, at the end of &lt;body&gt; --&gt;</span></div>
+    <div class="line bg-script">&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag-name">&lt;script&gt;</span></div>
+    <div class="line bg-script">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;alert("Hello!");</div>
+    <div class="line bg-script">&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag-name">&lt;/script&gt;</span></div>
+
+    <div class="line bg-body"><span class="tag-name">&nbsp;&nbsp;&lt;/body&gt;</span></div>
+    <div class="line bg-html"><span class="tag-name">&lt;/html&gt;</span></div>
+  </div>
+
+  <div class="legend" style="margin-top: 12px;">
+    <span class="pill pill-head">head — settings &amp; CSS</span>
+    <span class="pill pill-body">body — visible content</span>
+    <span class="pill pill-script">script — JavaScript</span>
+  </div>
+
+  <div class="info-box">
+    <strong>Key rule:</strong> CSS lives in <code>&lt;style&gt;</code> inside <code>&lt;head&gt;</code>.
+    JavaScript lives in <code>&lt;script&gt;</code> at the end of <code>&lt;body&gt;</code>.
+    Your HTML content goes in between, inside <code>&lt;body&gt;</code>.
+  </div>
+
+  <!-- ============================================================ -->
+  <div class="section-title">
+    <span class="step-badge">3</span>
+    CodePen Has 3 Panels — GitHub Needs 1 File
+  </div>
+
+  <p class="explain">
+    CodePen is great for experimenting because it splits HTML, CSS, and JS into 3 separate boxes.
+    But to publish on GitHub Pages, you need to combine everything into <strong>one</strong> HTML file.
+    Here's how they match up:
+  </p>
+
+  <div class="codepen-diagram">
+
+    <div class="cp-panel cp-html">
+      <div class="cp-header">CodePen — HTML Panel</div>
+      <div class="cp-content">
+        &lt;h1&gt;Hello!&lt;/h1&gt;<br>
+        &lt;button&gt;Click&lt;/button&gt;<br>
+        &lt;p&gt;My page&lt;/p&gt;
+      </div>
+    </div>
+
+    <div class="cp-panel cp-css">
+      <div class="cp-header">CodePen — CSS Panel</div>
+      <div class="cp-content">
+        body {<br>
+        &nbsp;&nbsp;background: blue;<br>
+        }<br>
+        h1 { color: white; }
+      </div>
+    </div>
+
+    <div class="cp-panel cp-js">
+      <div class="cp-header">CodePen — JS Panel</div>
+      <div class="cp-content">
+        let count = 0;<br><br>
+        function click() {<br>
+        &nbsp;&nbsp;count++;<br>
+        }
+      </div>
+    </div>
+
+    <div class="arrow-col">→</div>
+
+    <div class="cp-panel" style="flex: 1.4; min-width: 200px;">
+      <div class="cp-header" style="background: #2d3436; color: white;">index.html (GitHub)</div>
+      <div class="cp-content" style="background: #1e1e1e; color: #eee; font-size: 0.75rem;">
+        &lt;!doctype html&gt;<br>
+        &lt;html&gt;<br>
+        &lt;head&gt;<br>
+        &nbsp;<span style="color:#cba6f7;">&lt;style&gt;</span><br>
+        &nbsp;&nbsp;<span style="color:#a29bfe;">← CSS panel goes here</span><br>
+        &nbsp;<span style="color:#cba6f7;">&lt;/style&gt;</span><br>
+        &lt;/head&gt;<br>
+        &lt;body&gt;<br>
+        &nbsp;<span style="color:#55efc4;">← HTML panel goes here</span><br>
+        &nbsp;<span style="color:#f9e2af;">&lt;script&gt;</span><br>
+        &nbsp;&nbsp;<span style="color:#fdcb6e;">← JS panel goes here</span><br>
+        &nbsp;<span style="color:#f9e2af;">&lt;/script&gt;</span><br>
+        &lt;/body&gt;<br>
+        &lt;/html&gt;
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ============================================================ -->
+  <div class="section-title">
+    <span class="step-badge">4</span>
+    Step-by-Step: CodePen → GitHub
+  </div>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-text">
+        In your GitHub repo, create a new file called <code>index.html</code>
+        (or open the existing one you want to update).
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-text">
+        Copy the <strong>template below</strong> and paste it into your new file.
+        This gives you the correct skeleton.
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-text">
+        Go to CodePen. In the <strong>CSS panel</strong>, select all the code and copy it.
+        Then paste it between <code>&lt;style&gt;</code> and <code>&lt;/style&gt;</code> in your file.
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-text">
+        In the <strong>HTML panel</strong>, copy all the code.
+        Paste it between <code>&lt;body&gt;</code> and <code>&lt;script&gt;</code>.
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-text">
+        In the <strong>JS panel</strong>, copy all the code.
+        Paste it between <code>&lt;script&gt;</code> and <code>&lt;/script&gt;</code>.
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">6</div>
+      <div class="step-text">
+        Save the file and commit! Your page should now work on
+        <code>yourusername.github.io</code> — same as CodePen.
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <div class="section-title">
+    <span class="step-badge">5</span>
+    The Template — Copy This!
+  </div>
+
+  <p class="explain">
+    Use this as your starting point every time you move from CodePen to GitHub:
+  </p>
+
+  <div class="template-box">
+    <div class="template-header">
+      <span>index.html — starter template</span>
+      <span class="copy-hint">Select all → Copy → Paste into your GitHub file</span>
+    </div>
+    <div class="template-code">
+<span class="c-gray">&lt;!-- Step 1: Always start every HTML file with these two lines --&gt;</span><br>
+<span class="c-tag">&lt;!doctype html&gt;</span><br>
+<span class="c-tag">&lt;html</span> <span class="c-attr">lang</span>=<span class="c-str">"en"</span><span class="c-tag">&gt;</span><br>
+<br>
+<span class="c-tag">&lt;head&gt;</span><br>
+&nbsp;&nbsp;<span class="c-tag">&lt;meta</span> <span class="c-attr">charset</span>=<span class="c-str">"utf-8"</span><span class="c-tag">&gt;</span><br>
+&nbsp;&nbsp;<span class="c-tag">&lt;meta</span> <span class="c-attr">name</span>=<span class="c-str">"viewport"</span> <span class="c-attr">content</span>=<span class="c-str">"width=device-width, initial-scale=1.0"</span><span class="c-tag">&gt;</span><br>
+&nbsp;&nbsp;<span class="c-tag">&lt;title&gt;</span>My Awesome Page<span class="c-tag">&lt;/title&gt;</span><br>
+<br>
+&nbsp;&nbsp;<span class="c-gray">&lt;!-- Step 2: Paste your CSS panel code here --&gt;</span><br>
+&nbsp;&nbsp;<span class="c-purple">&lt;style&gt;</span><br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-gray">/* your CSS goes here */</span><br>
+<br>
+&nbsp;&nbsp;<span class="c-purple">&lt;/style&gt;</span><br>
+<span class="c-tag">&lt;/head&gt;</span><br>
+<br>
+<span class="c-tag">&lt;body&gt;</span><br>
+<br>
+&nbsp;&nbsp;<span class="c-gray">&lt;!-- Step 3: Paste your HTML panel code here --&gt;</span><br>
+<br>
+<br>
+&nbsp;&nbsp;<span class="c-gray">&lt;!-- Step 4: Paste your JS panel code here --&gt;</span><br>
+&nbsp;&nbsp;<span class="c-yellow">&lt;script&gt;</span><br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-gray">// your JavaScript goes here</span><br>
+<br>
+&nbsp;&nbsp;<span class="c-yellow">&lt;/script&gt;</span><br>
+<br>
+<span class="c-tag">&lt;/body&gt;</span><br>
+<span class="c-tag">&lt;/html&gt;</span>
+    </div>
+  </div>
+
+  <div class="info-box tip" style="margin-top: 24px;">
+    <strong>Tip:</strong> The order matters! Always put <code>&lt;style&gt;</code> in the head,
+    and <code>&lt;script&gt;</code> at the <em>end</em> of the body — this makes your page load correctly
+    and your JavaScript can find all the HTML elements it needs.
+  </div>
+
+</div>
+
+<footer>Web Craft — made for learning HTML, CSS &amp; JavaScript</footer>
+
+</body>
+</html>

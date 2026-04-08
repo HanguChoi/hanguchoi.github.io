@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>Digital Clock</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      background: #111;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Courier New', monospace;
+    }
+
+    .clock-wrap {
+      text-align: center;
+    }
+
+    /* ---- Time display ---- */
+    #time {
+      font-size: clamp(3rem, 15vw, 7rem);
+      color: #00ff88;
+      letter-spacing: 0.08em;
+      text-shadow: 0 0 30px rgba(0, 255, 136, 0.5);
+    }
+
+    /* ---- AM/PM badge ---- */
+    #ampm {
+      font-size: 1.5rem;
+      color: #00aa55;
+      margin-top: 8px;
+      letter-spacing: 0.2em;
+    }
+
+    /* ---- Date line ---- */
+    #date {
+      font-size: 1.1rem;
+      color: #555;
+      margin-top: 16px;
+      letter-spacing: 0.1em;
+    }
+
+    /* ---- Timezone selector ---- */
+    .controls {
+      margin-top: 32px;
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .tz-btn {
+      background: transparent;
+      border: 1px solid #333;
+      color: #555;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 0.85rem;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .tz-btn:hover    { color: #00ff88; border-color: #00ff88; }
+    .tz-btn.active   { color: #00ff88; border-color: #00ff88; background: rgba(0,255,136,0.08); }
+  </style>
+</head>
+<body>
+<style>
+  .wc-nav { position: fixed; top: 12px; left: 12px; display: flex; gap: 8px; z-index: 1000; }
+  .wc-nav a { background: rgba(0,0,0,0.65); color: white; text-decoration: none; padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-family: Arial, sans-serif; backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.15); }
+  .wc-nav a:hover { background: rgba(0,0,0,0.9); }
+</style>
+<nav class="wc-nav">
+  <a href="/">&#127968; Home</a>
+  <a href="/web-craft/">&#8592; Examples</a>
+</nav>
+
+<div class="clock-wrap">
+  <div id="time">00:00:00</div>
+  <div id="ampm">AM</div>
+  <div id="date">Loading…</div>
+
+  <div class="controls">
+    <button class="tz-btn active" data-tz="local">Local Time</button>
+    <button class="tz-btn" data-tz="America/New_York">New York</button>
+    <button class="tz-btn" data-tz="Europe/London">London</button>
+    <button class="tz-btn" data-tz="Asia/Seoul">Seoul</button>
+    <button class="tz-btn" data-tz="Asia/Tokyo">Tokyo</button>
+  </div>
+</div>
+
+<script>
+  let currentTZ = 'local'; // which timezone to show
+
+  // Days of the week and months — used to build the date string
+  const DAYS   = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+  function updateClock() {
+    const now = new Date();
+
+    let hours, minutes, seconds, dayIndex, month, dayNum, year;
+
+    if (currentTZ === 'local') {
+      // Use local time
+      hours   = now.getHours();
+      minutes = now.getMinutes();
+      seconds = now.getSeconds();
+      dayIndex = now.getDay();
+      month   = now.getMonth();
+      dayNum  = now.getDate();
+      year    = now.getFullYear();
+    } else {
+      // Convert to the selected timezone
+      const opts = { timeZone: currentTZ, hour:'2-digit', minute:'2-digit', second:'2-digit',
+                     weekday:'long', month:'short', day:'numeric', year:'numeric', hour12: false };
+      const parts = new Intl.DateTimeFormat('en-US', opts).formatToParts(now);
+      const get = (type) => parts.find(p => p.type === type)?.value;
+      hours   = parseInt(get('hour'));
+      minutes = parseInt(get('minute'));
+      seconds = parseInt(get('second'));
+      // For date parts in other tz, use toLocaleDateString
+      const dateStr = now.toLocaleDateString('en-US', { timeZone: currentTZ, weekday:'long', month:'short', day:'numeric', year:'numeric' });
+      document.getElementById('date').textContent = dateStr;
+    }
+
+    // 12-hour format
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    const h12  = hours % 12 || 12;
+
+    // padStart adds a leading zero so "9" becomes "09"
+    const hh = String(h12).padStart(2, '0');
+    const mm = String(minutes).padStart(2, '0');
+    const ss = String(seconds).padStart(2, '0');
+
+    document.getElementById('time').textContent = hh + ':' + mm + ':' + ss;
+    document.getElementById('ampm').textContent = ampm;
+
+    if (currentTZ === 'local') {
+      document.getElementById('date').textContent =
+        DAYS[dayIndex] + ', ' + MONTHS[month] + ' ' + dayNum + ', ' + year;
+    }
+  }
+
+  // Run every 1000ms (1 second)
+  setInterval(updateClock, 1000);
+  updateClock(); // run immediately so there's no blank flash
+
+  // Timezone button clicks
+  document.querySelectorAll('.tz-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.tz-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentTZ = btn.dataset.tz;
+      updateClock();
+    });
+  });
+</script>
+
+</body>
+</html>

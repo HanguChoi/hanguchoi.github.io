@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>Web Craft — Examples</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f0f4f8;
+      color: #222;
+    }
+
+    header {
+      background: #00b7ff;
+      color: white;
+      padding: 32px 24px 24px;
+      text-align: center;
+    }
+    header h1 { font-size: 2.4rem; margin-bottom: 8px; }
+    header p { font-size: 1.1rem; opacity: 0.9; }
+    header a { color: white; opacity: 0.8; font-size: 0.9rem; display: inline-block; margin-top: 12px; }
+    header a:hover { opacity: 1; }
+
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #888;
+      padding: 32px 24px 8px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+      padding: 0 24px 24px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      transition: transform 0.18s, box-shadow 0.18s;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.14);
+    }
+
+    .card-thumb {
+      height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+    }
+
+    .card-body { padding: 16px; }
+    .card-body h3 { font-size: 1rem; margin-bottom: 4px; }
+    .card-body p { font-size: 0.85rem; color: #666; line-height: 1.4; margin-bottom: 10px; }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .badge-easy   { background: #d4f5d4; color: #1a6e1a; }
+    .badge-hard   { background: #fde0e0; color: #8a1515; }
+    .badge-learn  { background: #e0e8ff; color: #1a2e8a; }
+
+    .concepts {
+      margin-top: 8px;
+      font-size: 0.78rem;
+      color: #999;
+    }
+    .concepts span {
+      display: inline-block;
+      background: #f0f4f8;
+      border-radius: 4px;
+      padding: 2px 7px;
+      margin: 2px 2px 0 0;
+    }
+
+    footer {
+      text-align: center;
+      padding: 32px;
+      color: #aaa;
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Web Craft</h1>
+  <p>Hands-on examples — HTML, CSS &amp; JavaScript</p>
+  <a href="/">← Back to Portfolio</a>
+</header>
+
+<!-- ======================================================== -->
+<div class="section-label">Learning Resources</div>
+<div class="grid">
+
+  <a class="card" href="/web-craft/homepage-template/simple.html">
+    <div class="card-thumb" style="background: #f0f4f8; font-size: 2.5rem;">🔗</div>
+    <div class="card-body">
+      <h3>My Links Page — Projects</h3>
+      <span class="badge badge-learn">Template</span>
+      <p>A simple home page listing your projects. Copy, change your name, swap in your links!</p>
+      <div class="concepts"><span>copy &amp; paste</span><span>nav</span><span>links</span></div>
+    </div>
+  </a>
+
+  <a class="card" href="/web-craft/resources/">
+    <div class="card-thumb" style="background: linear-gradient(135deg, #6c5ce7, #a29bfe); font-size: 2.5rem;">📚</div>
+    <div class="card-body">
+      <h3>Resources &amp; Tools</h3>
+      <span class="badge badge-learn">Guide</span>
+      <p>W3Schools, CodePen, color tools, Google Fonts, and more useful links.</p>
+      <div class="concepts"><span>reference</span><span>tools</span><span>tutorials</span></div>
+    </div>
+  </a>
+
+  <a class="card" href="/web-craft/resources/">
+    <div class="card-thumb" style="background: linear-gradient(135deg, #6c5ce7, #a29bfe); font-size: 2.5rem;">📚</div>
+    <div class="card-body">
+      <h3>Resources &amp; Tools</h3>
+      <span class="badge badge-learn">Guide</span>
+      <p>W3Schools, CodePen, color tools, Google Fonts, and more useful links.</p>
+      <div class="concepts"><span>reference</span><span>tools</span><span>tutorials</span></div>
+    </div>
+  </a>
+
+</div>
+
+<!-- ======================================================== -->
+<div class="section-label">Very Easy — Start Here</div>
+<div class="grid">
+
+  <a class="card" href="/web-craft/30-score-button/">
+    <div class="card-thumb" style="background: #1a1a2e; font-size: 3.5rem;">🏀</div>
+    <div class="card-body">
+      <h3>Score Button</h3>
+      <span class="badge badge-easy">Very Easy</span>
+      <p>A big number that goes up when you click. Your first variable and function!</p>
+      <div class="concepts"><span>variable</span><span>function</span><span>textContent</span></div>
+    </div>
+  </a>
+
+  <a class="card" href="/web-craft/30-score-button/">
+    <div class="card-thumb" style="background: #1a1a2e; font-size: 3.5rem;">🏀</div>
+    <div class="card-body">
+      <h3>Score Button</h3>
+      <span class="badge badge-easy">Very Easy</span>
+      <p>A big number that goes up when you click. Your first variable and function!</p>
+      <div class="concepts"><span>variable</span><span>function</span><span>textContent</span></div>
+    </div>
+  </a>
+
+  <a class="card" href="/web-craft/31-baseball-simple/">
+    <div class="card-thumb" style="background: #2d5a27; font-size: 3rem;">⚾</div>
+    <div class="card-body">
+      <h3>Baseball Counter</h3>
+      <span class="badge badge-easy">Very Easy</span>
+      <p>Count balls and strikes with two buttons. One function handles both!</p>
+      <div class="concepts"><span>function</span><span>Number()</span><span>id</span></div>
+    </div>
+  </a>
+
+</div>
+
+
+
+<footer>Web Craft — made for learning HTML, CSS &amp; JavaScript</footer>
+
+</body>
+</html>

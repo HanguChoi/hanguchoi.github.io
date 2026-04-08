@@ -1,0 +1,503 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>Web Craft — Examples</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f0f4f8;
+      color: #222;
+    }
+
+    header {
+      background: #00b7ff;
+      color: white;
+      padding: 32px 24px 24px;
+      text-align: center;
+    }
+    header h1 { font-size: 2.4rem; margin-bottom: 8px; }
+    header p { font-size: 1.1rem; opacity: 0.9; }
+    header a { color: white; opacity: 0.8; font-size: 0.9rem; display: inline-block; margin-top: 12px; }
+    header a:hover { opacity: 1; }
+
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #888;
+      padding: 32px 24px 8px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+      padding: 0 24px 24px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      transition: transform 0.18s, box-shadow 0.18s;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.14);
+    }
+
+    .card-thumb {
+      height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+    }
+
+    .card-body { padding: 16px; }
+    .card-body h3 { font-size: 1rem; margin-bottom: 4px; }
+    .card-body p { font-size: 0.85rem; color: #666; line-height: 1.4; margin-bottom: 10px; }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .badge-easy   { background: #d4f5d4; color: #1a6e1a; }
+    .badge-hard   { background: #fde0e0; color: #8a1515; }
+    .badge-learn  { background: #e0e8ff; color: #1a2e8a; }
+
+    .concepts {
+      margin-top: 8px;
+      font-size: 0.78rem;
+      color: #999;
+    }
+    .concepts span {
+      display: inline-block;
+      background: #f0f4f8;
+      border-radius: 4px;
+      padding: 2px 7px;
+      margin: 2px 2px 0 0;
+    }
+
+    footer {
+      text-align: center;
+      padding: 32px;
+      color: #aaa;
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Web Craft</h1>
+  <p>Hands-on examples — HTML, CSS &amp; JavaScript</p>
+  <a href="/">← Back to Portfolio</a>
+</header>
+
+<!-- ======================================================== -->
+<div class="section-label">
+  <h2 style="font-size: 2rem; margin: 48px 0 0; color: #222;">Learning Resources</h2>
+  <div style="padding-top:20px;"></div>
+
+</div>
+<div class="grid">
+
+
+  <a class="card" href="learn-github-pages/">
+    <div class="card-thumb" style="background: linear-gradient(135deg, #24292e, #586069); font-size: 2.5rem;">🐙</div>
+    <div class="card-body">
+      <h3>Your GitHub Pages Site</h3>
+      <span class="badge badge-learn">Guide</span>
+      <p>Step-by-step: create a repo, add index.html, and see your Hello World live at yourusername.github.io!</p>
+      <div class="concepts"><span>GitHub</span><span>repo</span><span>publish</span></div>
+    </div>
+  </a>
+
+  <a class="card" href="homepage-template/simple.html">
+    <div class="card-thumb" style="background: #f0fff0; font-size: 2.5rem;">🔗</div>
+    <div class="card-body">
+      <h3>Simple Links Page</h3>
+      <span class="badge badge-learn">Template</span>
+      <p>A minimal links page — just a name, a subtitle, and a list. Easy to copy and customize!</p>
+      <div class="concepts"><span>copy &amp; paste</span><span>nav</span><span>links</span></div>
+    </div>
+  </a>
+
+  <a class="card" href="homepage-template/resource_card.html">
+    <div class="card-thumb" style="background: linear-gradient(135deg, #6c5ce7, #00b7ff); font-size: 2.5rem;">📚</div>
+    <div class="card-body">
+      <h3>Resource Cards Page</h3>
+      <span class="badge badge-learn">Template</span>
+      <p>A polished card-grid page for sharing your favorite tools and websites.</p>
+      <div class="concepts"><span>grid</span><span>cards</span><span>links</span></div>
+    </div>
+  </a>
+
+  <a class="card" href="homepage-template/webcraft_index.html">
+    <div class="card-thumb" style="background: #00b7ff; font-size: 2.5rem;">🌐</div>
+    <div class="card-body">
+      <h3>Webcraft-Style Index</h3>
+      <span class="badge badge-learn">Template</span>
+      <p>A full homepage with header, section labels, and cards — like this page!</p>
+      <div class="concepts"><span>grid</span><span>header</span><span>sections</span></div>
+    </div>
+  </a>
+
+  <a class="card" href="learn-html-structure/">
+    <div class="card-thumb" style="background: linear-gradient(135deg, #0652DD, #00b7ff); font-size: 2.5rem;">📄</div>
+    <div class="card-body">
+      <h3>HTML File Structure</h3>
+      <span class="badge badge-learn">Guide</span>
+      <p>How an HTML file is built — head, body, style, script — and how to move your code from CodePen to GitHub.</p>
+      <div class="concepts"><span>anatomy</span><span>CodePen → GitHub</span><span>template</span></div>
+    </div>
+  </a>
+
+  <a class="card" href="learn-devtools/">
+    <div class="card-thumb" style="background: linear-gradient(135deg, #2d3436, #00b894); font-size: 2.5rem;">🔍</div>
+    <div class="card-body">
+      <h3>Browser DevTools</h3>
+      <span class="badge badge-learn">Guide</span>
+      <p>Inspect HTML, read errors, and use console.log to debug — all inside your browser for free.</p>
+      <div class="concepts"><span>DevTools</span><span>console.log</span><span>debugging</span></div>
+    </div>
+  </a>
+
+  <a class="card" href="learn-no-server/">
+    <div class="card-thumb" style="background: linear-gradient(135deg, #2d3436, #636e72); font-size: 2.5rem;">🌐</div>
+    <div class="card-body">
+      <h3>No Server? No Problem.</h3>
+      <span class="badge badge-learn">Guide</span>
+      <p>Plain HTML/CSS/JS has no server or database. See what that means — what you can and can't do.</p>
+      <div class="concepts"><span>browser</span><span>static</span><span>limitations</span></div>
+    </div>
+  </a>
+
+  <a class="card" href="resources/">
+    <div class="card-thumb" style="background: linear-gradient(135deg, #6c5ce7, #a29bfe); font-size: 2.5rem;">📚</div>
+    <div class="card-body">
+      <h3>Resources &amp; Tools</h3>
+      <span class="badge badge-learn">Guide</span>
+      <p>W3Schools, CodePen, color tools, Google Fonts, and more useful links.</p>
+      <div class="concepts"><span>reference</span><span>tools</span><span>tutorials</span></div>
+    </div>
+  </a>
+
+</div>
+
+<!-- ======================================================== -->
+
+<div class="section-label">
+  <h2 style="font-size: 2rem; margin: 48px 0 0; color: #222;">Examples</h2>
+  <div style="padding-top:20px;"></div>
+  Very Easy — Start Here
+</div>
+<div class="grid">
+
+  <a class="card" href="27-emoji-weather/">
+    <div class="card-thumb" style="background: #e8f4fd; font-size: 3.5rem;">☀️</div>
+    <div class="card-body">
+      <h3>Emoji Weather</h3>
+      <span class="badge badge-easy">Very Easy</span>
+      <p>Click a button to change the weather emoji. One function — that's it!</p>
+      <div class="concepts"><span>button</span><span>onclick</span><span>1 function</span></div>
+    </div>
+  </a>
+
+  <a class="card" href="28-animal-picker/">
+    <div class="card-thumb" style="background: #f0fff0; font-size: 3.5rem;">🐼</div>
+    <div class="card-body">
+      <h3>Animal Picker</h3>
+      <span class="badge badge-easy">Very Easy</span>
+      <p>Click an animal to show its emoji and name. One function, six buttons.</p>
+      <div class="concepts"><span>button</span><span>onclick</span><span>1 function</span></div>
+    </div>
+  </a>
+
+  <a class="card" href="29-name-card/">
+    <div class="card-thumb" style="background: #fff0f5; font-size: 3rem; color: #e84393;">Hi!</div>
+    <div class="card-body">
+      <h3>Name Card</h3>
+      <span class="badge badge-easy">Very Easy</span>
+      <p>Type your name and watch it appear in giant letters. No JS needed!</p>
+      <div class="concepts"><span>input</span><span>oninput</span><span>no JS</span></div>
+    </div>
+  </a>
+
+  <a class="card" href="30-score-button/">
+    <div class="card-thumb" style="background: #1a1a2e; font-size: 3.5rem;">🏀</div>
+    <div class="card-body">
+      <h3>Score Button</h3>
+      <span class="badge badge-easy">Very Easy</span>
+      <p>A big number that goes up when you click. Your first variable and function!</p>
+      <div class="concepts"><span>variable</span><span>function</span><span>textContent</span></div>
+    </div>
+  </a>
+
+  <a class="card" href="31-baseball-simple/">
+    <div class="card-thumb" style="background: #2d5a27; font-size: 3rem;">⚾</div>
+    <div class="card-body">
+      <h3>Baseball Counter</h3>
+      <span class="badge badge-easy">Very Easy</span>
+      <p>Count balls and strikes with two buttons. One function handles both!</p>
+      <div class="concepts"><span>function</span><span>Number()</span><span>id</span></div>
+    </div>
+  </a>
+
+</div>
+
+<!-- ======================================================== -->
+<div class="section-label">Easy</div>
+<div class="grid">
+
+  <a class="card" href="01-hello-world/">
+    <div class="card-thumb" style="background: linear-gradient(135deg, #f9ca24, #f0932b);">🌟</div>
+    <div class="card-body">
+      <h3>01 — Hello World</h3>
+      <span class="badge badge-easy">Easy</span>
+      <p>Your first webpage — big colorful text, styled paragraphs, and a fun background.</p>
+      <div class="concepts"><span>HTML tags</span><span>CSS colors</span><span>fonts</span></div>
+    </div>
+  </a>
+
+  <a class="card" href="02-click-counter/">
+    <div class="card-thumb" style="background: linear-gradient(135deg, #6ab1f8, #3c7fe8);">🔢</div>
+    <div class="card-body">
+      <h3>02 — Click Counter</h3>
+      <span class="badge badge-easy">Easy</span>
+      <p>A big number that goes up every time you click. Your first JavaScript!</p>
+      <div class="concepts"><span>button</span><span>onclick</span><span>variables</span><span>innerHTML</span></div>
+    </div>
+  </a>
+
+  <a class="card" href="03-color-switcher/">
+    <div class="card-thumb" style="background: linear-gradient(135deg, #fd79a8, #6c5ce7, #00b7ff);">🎨</div>
+    <div class="card-body">
+      <h3>03 — Color Switcher</h3>
+      <span class="badge badge-easy">Easy</span>
+      <p>Click to instantly change the entire page color. Explore arrays and randomness.</p>
+      <div class="concepts"><span>arrays</span><span>Math.random</span><span>style</span></div>
+    </div>
+  </a>
+
+  <a class="card" href="16-bible-verse/">
+    <div class="card-thumb" style="background: linear-gradient(135deg, #2d3436, #0c3547); color: #fdcb6e; font-size: 1.5rem;">✝️</div>
+    <div class="card-body">
+      <h3>04 — Bible Verse</h3>
+      <span class="badge badge-easy">Easy</span>
+      <p>A beautiful card with a photo and Bible verse. Swap in your own favorites!</p>
+      <div class="concepts"><span>layout</span><span>fonts</span><span>arrays</span><span>random</span></div>
+    </div>
+  </a>
+
+  <a class="card" href="21-basketball-scoreboard/">
+    <div class="card-thumb" style="background: linear-gradient(135deg, #1a1a2e, #ff6b35); font-size: 2.8rem;">🏀</div>
+    <div class="card-body">
+      <h3>05 — Basketball Scoreboard</h3>
+      <span class="badge badge-easy">Easy</span>
+      <p>A glowing NBA-style scoreboard. Click +1, +2, +3 for each team and track the game!</p>
+      <div class="concepts"><span>variables</span><span>onclick</span><span>innerHTML</span></div>
+    </div>
+  </a>
+
+  <a class="card" href="22-baseball-counter/">
+    <div class="card-thumb" style="background: radial-gradient(ellipse, #3d7a33, #1e3d19); font-size: 2.8rem;">⚾</div>
+    <div class="card-body">
+      <h3>06 — Baseball Counter</h3>
+      <span class="badge badge-easy">Easy</span>
+      <p>Track Balls, Strikes, and Outs — with automatic walk, strikeout, and inning-over logic!</p>
+      <div class="concepts"><span>if/else</span><span>variables</span><span>DOM dots</span></div>
+    </div>
+  </a>
+
+  <a class="card" href="24-health-bar/">
+    <div class="card-thumb" style="background: #f0f4f8; font-size: 2.5rem;">🐶🌳</div>
+    <div class="card-body">
+      <h3>07 — Virtual Pet &amp; Plant</h3>
+      <span class="badge badge-easy">Easy</span>
+      <p>Feed a hungry dog and water a thirsty tree! Both slowly drain — don't forget them!</p>
+      <div class="concepts"><span>setInterval</span><span>Math.max/min</span><span>animation</span></div>
+    </div>
+  </a>
+
+  <a class="card" href="25-click-speed/">
+    <div class="card-thumb" style="background: linear-gradient(135deg, #1a1a2e, #16213e); font-size: 2.5rem;">⚡</div>
+    <div class="card-body">
+      <h3>08 — Click Speed Challenge</h3>
+      <span class="badge badge-easy">Easy</span>
+      <p>Click as fast as you can in 5 seconds! See your CPS score and get a rating.</p>
+      <div class="concepts"><span>setInterval</span><span>countdown</span><span>score</span></div>
+    </div>
+  </a>
+
+  <a class="card" href="26-sports-card/">
+    <div class="card-thumb" style="background: linear-gradient(135deg, #16213e, #0f3460); font-size: 2.5rem;">🏆</div>
+    <div class="card-body">
+      <h3>09 — My Sports Card</h3>
+      <span class="badge badge-easy">Easy</span>
+      <p>Enter your name, sport, and jersey number to generate your own trading card — live!</p>
+      <div class="concepts"><span>input/select</span><span>if/else</span><span>live preview</span></div>
+    </div>
+  </a>
+
+  <a class="card" href="10-image-slideshow/">
+    <div class="card-thumb" style="background: linear-gradient(135deg, #fddb92, #d1fdff);">🖼️</div>
+    <div class="card-body">
+      <h3>10 — Image Slideshow</h3>
+      <span class="badge badge-easy">Easy</span>
+      <p>A photo carousel that plays automatically with smooth fade transitions.</p>
+      <div class="concepts"><span>arrays</span><span>setInterval</span><span>CSS transition</span></div>
+    </div>
+  </a>
+
+  <a class="card" href="18-trivia-quiz/">
+    <div class="card-thumb" style="background: linear-gradient(135deg, #6c5ce7, #a29bfe); color: white; font-size: 1.4rem;">❓</div>
+    <div class="card-body">
+      <h3>11 — Bible Quiz</h3>
+      <span class="badge badge-easy">Easy</span>
+      <p>A multiple-choice Bible quiz covering Genesis, Old &amp; New Testament, and the life of Jesus.</p>
+      <div class="concepts"><span>arrays</span><span>shuffle</span><span>game logic</span></div>
+    </div>
+  </a>
+
+</div>
+
+<!-- ======================================================== -->
+<div class="section-label">Hard</div>
+<div class="grid">
+
+  <a class="card" href="06-digital-clock/">
+    <div class="card-thumb" style="background: #111; color: #00ff88; font-size: 1.6rem; font-family: monospace;">12:34:56</div>
+    <div class="card-body">
+      <h3>12 — Digital Clock</h3>
+      <span class="badge badge-hard">Hard</span>
+      <p>A real live clock that ticks every second. Learn to work with time in JavaScript.</p>
+      <div class="concepts"><span>Date</span><span>setInterval</span><span>padStart</span></div>
+    </div>
+  </a>
+
+  <a class="card" href="07-typewriter/">
+    <div class="card-thumb" style="background: linear-gradient(135deg, #2d3436, #636e72); color: #fdcb6e; font-family: monospace; font-size: 1.3rem;">Hello_</div>
+    <div class="card-body">
+      <h3>13 — Typewriter Effect</h3>
+      <span class="badge badge-hard">Hard</span>
+      <p>Text that types itself out, letter by letter. Great for hero banners!</p>
+      <div class="concepts"><span>setTimeout</span><span>strings</span><span>recursion</span></div>
+    </div>
+  </a>
+
+  <a class="card" href="08-gradient-generator/">
+    <div class="card-thumb" style="background: linear-gradient(135deg, #e17055, #d63031, #6c5ce7);">🌈</div>
+    <div class="card-body">
+      <h3>14 — Gradient Generator</h3>
+      <span class="badge badge-hard">Hard</span>
+      <p>Drag sliders to mix colors in real time. A live CSS gradient designer!</p>
+      <div class="concepts"><span>input range</span><span>CSS gradients</span><span>live update</span></div>
+    </div>
+  </a>
+
+  <a class="card" href="09-todo-list/">
+    <div class="card-thumb" style="background: linear-gradient(135deg, #74b9ff, #0984e3);">✅</div>
+    <div class="card-body">
+      <h3>15 — Todo List</h3>
+      <span class="badge badge-hard">Hard</span>
+      <p>Add and delete tasks. Your list is saved even after you close the browser!</p>
+      <div class="concepts"><span>localStorage</span><span>createElement</span><span>events</span></div>
+    </div>
+  </a>
+
+  <a class="card" href="12-css-animations/">
+    <div class="card-thumb" style="background: #1a1a2e; font-size: 2.5rem;">⏳</div>
+    <div class="card-body">
+      <h3>16 — CSS Animations</h3>
+      <span class="badge badge-hard">Hard</span>
+      <p>A collection of 4 cool loading animations — spinner, pulse, wave, and dots.</p>
+      <div class="concepts"><span>@keyframes</span><span>animation-delay</span><span>nth-child</span></div>
+    </div>
+  </a>
+
+  <a class="card" href="13-memory-game/">
+    <div class="card-thumb" style="background: linear-gradient(135deg, #87ceeb, #4fc3f7); font-size: 2.5rem;">🦊</div>
+    <div class="card-body">
+      <h3>17 — Memory Card Game</h3>
+      <span class="badge badge-hard">Hard</span>
+      <p>Flip cards to find matching pairs. A full game with flip animation and a score!</p>
+      <div class="concepts"><span>game state</span><span>CSS flip</span><span>setTimeout</span></div>
+    </div>
+  </a>
+
+  <a class="card" href="19-country-explorer/">
+    <div class="card-thumb" style="background: linear-gradient(135deg, #00b894, #55efc4);">🌍</div>
+    <div class="card-body">
+      <h3>18 — Country Explorer</h3>
+      <span class="badge badge-hard">Hard</span>
+      <p>Search countries and see flags, population, languages, and more from a live API.</p>
+      <div class="concepts"><span>fetch</span><span>REST Countries</span><span>CSS grid</span></div>
+    </div>
+  </a>
+
+  <a class="card" href="20-world-map/">
+    <div class="card-thumb" style="background: #1a1a2e; color: #3498db; font-size: 2rem;">🗺️</div>
+    <div class="card-body">
+      <h3>19 — World Map</h3>
+      <span class="badge badge-hard">Hard</span>
+      <p>Interactive world map colored by population. Hover &amp; click countries for details.</p>
+      <div class="concepts"><span>D3.js</span><span>GeoJSON</span><span>REST Countries</span><span>zoom</span></div>
+    </div>
+  </a>
+
+  <a class="card" href="11-drawing-canvas/">
+    <div class="card-thumb" style="background: white; border-bottom: 1px solid #eee;">🖌️</div>
+    <div class="card-body">
+      <h3>20 — Drawing Canvas</h3>
+      <span class="badge badge-hard">Hard</span>
+      <p>Draw freely with your mouse! Pick colors, change brush size, and clear the canvas.</p>
+      <div class="concepts"><span>canvas</span><span>mouse events</span><span>ctx.lineTo</span></div>
+    </div>
+  </a>
+
+  <a class="card" href="14-starfield/">
+    <div class="card-thumb" style="background: #000; color: white; font-size: 2rem;">🌌</div>
+    <div class="card-body">
+      <h3>21 — Starfield</h3>
+      <span class="badge badge-hard">Hard</span>
+      <p>Fly through space! Stars rush toward you in a 3D canvas animation.</p>
+      <div class="concepts"><span>canvas</span><span>requestAnimationFrame</span><span>math</span></div>
+    </div>
+  </a>
+
+  <a class="card" href="15-fireworks/">
+    <div class="card-thumb" style="background: #000; font-size: 2.5rem;">🎆</div>
+    <div class="card-body">
+      <h3>22 — Fireworks</h3>
+      <span class="badge badge-hard">Hard</span>
+      <p>Click anywhere on the screen to launch fireworks! Particles, gravity, and color.</p>
+      <div class="concepts"><span>particles</span><span>gravity</span><span>canvas</span></div>
+    </div>
+  </a>
+
+</div>
+
+<footer>Web Craft — made for learning HTML, CSS &amp; JavaScript</footer>
+
+</body>
+</html>

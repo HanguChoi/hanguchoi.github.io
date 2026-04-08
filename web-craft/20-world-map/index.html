@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>World Map</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      background: #1a1a2e;
+      font-family: Arial, sans-serif;
+      color: white;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      padding: 16px 24px;
+      text-align: center;
+    }
+    header h1 { font-size: 1.4rem; margin-bottom: 4px; }
+    header p {
+      font-size: 0.8rem;
+      color: #636e72;
+    }
+    header a { color: #00b7ff; text-decoration: none; }
+
+    /* ---- Map area — ocean color ---- */
+    .map-container {
+      flex: 1;
+      position: relative;
+      min-height: 500px;
+      background: #9ee1f9;   /* ocean blue */
+    }
+
+    svg {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      inset: 0;
+    }
+
+    .country-path {
+      fill: #fffde7;           /* default for unknown population */
+      stroke: rgba(0,0,0,0.25);
+      stroke-width: 0.5;
+      cursor: pointer;
+      transition: fill 0.15s;
+    }
+    .country-path:hover {
+      fill: #e06e0b;           /* golden yellow highlight */
+      stroke: #333;
+      stroke-width: 1;
+    }
+
+    /* Population color scale — light yellow (few) → deep orange (many) */
+    .pop-1 { fill: #fffde7; }   /* < 1M      — cream yellow */
+    .pop-2 { fill: #fff176; }   /* 1M–5M     — light yellow */
+    .pop-3 { fill: #ffee58; }   /* 5M–20M    — yellow */
+    .pop-4 { fill: #ffc107; }   /* 20M–50M   — amber */
+    .pop-5 { fill: #ff9800; }   /* 50M–100M  — orange */
+    .pop-6 { fill: #f57c00; }   /* 100M–500M — dark orange */
+    .pop-7 { fill: #e65100; }   /* > 500M    — deep orange */
+
+    /* ---- Tooltip ---- */
+    .tooltip {
+      position: fixed;
+      background: rgba(0, 0, 0, 0.9);
+      border: 1px solid #333;
+      border-radius: 10px;
+      padding: 14px 18px;
+      pointer-events: none;
+      display: none;
+      z-index: 100;
+      min-width: 200px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    }
+    .tooltip.visible { display: block; }
+    .tooltip-flag {
+      font-size: 2rem;
+      margin-bottom: 6px;
+    }
+    .tooltip-name {
+      font-size: 1.1rem;
+      font-weight: bold;
+      margin-bottom: 4px;
+    }
+    .tooltip-row {
+      font-size: 0.82rem;
+      color: #b2bec3;
+      margin-bottom: 3px;
+    }
+    .tooltip-row strong { color: white; }
+
+    /* ---- Info panel (click) ---- */
+    .info-panel {
+      position: fixed;
+      top: 50%;
+      right: 20px;
+      transform: translateY(-50%);
+      background: rgba(22, 33, 62, 0.95);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 16px;
+      padding: 24px;
+      width: 280px;
+      display: none;
+      z-index: 90;
+      backdrop-filter: blur(8px);
+    }
+    .info-panel.visible { display: block; }
+
+    .info-close {
+      position: absolute;
+      top: 8px;
+      right: 12px;
+      background: transparent;
+      border: none;
+      color: #636e72;
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+
+    .info-flag { font-size: 4rem; text-align: center; margin-bottom: 12px; }
+    .info-name {
+      font-size: 1.3rem;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 4px;
+    }
+    .info-native {
+      text-align: center;
+      font-size: 0.85rem;
+      color: #636e72;
+      margin-bottom: 16px;
+    }
+
+    .info-table {
+      width: 100%;
+      font-size: 0.85rem;
+      border-collapse: collapse;
+    }
+    .info-table td {
+      padding: 6px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .info-table td:first-child {
+      color: #636e72;
+      font-weight: bold;
+    }
+
+    /* ---- Legend ---- */
+    .legend {
+      position: fixed;
+      bottom: 16px;
+      left: 16px;
+      background: rgba(0,0,0,0.7);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 0.72rem;
+      color: #b2bec3;
+    }
+    .legend-title { font-weight: bold; margin-bottom: 6px; color: white; }
+    .legend-row { display: flex; align-items: center; gap: 6px; margin-bottom: 3px; }
+    .legend-box { width: 16px; height: 12px; border-radius: 2px; }
+
+    /* ---- Controls ---- */
+    .controls {
+      position: fixed;
+      bottom: 16px;
+      right: 16px;
+      display: flex;
+      gap: 8px;
+    }
+    .ctrl-btn {
+      background: rgba(0,0,0,0.7);
+      border: 1px solid #333;
+      color: white;
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .ctrl-btn:hover { background: rgba(0,0,0,0.9); border-color: #00b7ff; }
+
+    /* Loading */
+    #loading {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: #636e72;
+      font-size: 1rem;
+    }
+  </style>
+</head>
+<body>
+<style>
+  .wc-nav { position: fixed; top: 12px; left: 12px; display: flex; gap: 8px; z-index: 1000; }
+  .wc-nav a { background: rgba(0,0,0,0.65); color: white; text-decoration: none; padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-family: Arial, sans-serif; backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.15); }
+  .wc-nav a:hover { background: rgba(0,0,0,0.9); }
+</style>
+<nav class="wc-nav">
+  <a href="/">&#127968; Home</a>
+  <a href="/web-craft/">&#8592; Examples</a>
+</nav>
+
+<header>
+  <h1>World Map Explorer</h1>
+  <p>
+    Map: GeoJSON &bull;
+    Data: <a href="https://restcountries.com" target="_blank" rel="noopener noreferrer">REST Countries API</a> (free, MPL 2.0) &bull;
+    Rendered with <a href="https://d3js.org" target="_blank" rel="noopener noreferrer">D3.js</a> (BSD license)
+  </p>
+</header>
+
+<div class="map-container" id="map-container">
+  <svg id="map-svg"></svg>
+</div>
+
+<div id="loading">Loading map…</div>
+
+<!-- Tooltip (hover) -->
+<div class="tooltip" id="tooltip">
+  <div class="tooltip-flag" id="tt-flag"></div>
+  <div class="tooltip-name" id="tt-name"></div>
+  <div class="tooltip-row">Capital: <strong id="tt-capital"></strong></div>
+  <div class="tooltip-row">Population: <strong id="tt-pop"></strong></div>
+  <div class="tooltip-row">Region: <strong id="tt-region"></strong></div>
+</div>
+
+<!-- Info panel (click) -->
+<div class="info-panel" id="info-panel">
+  <button class="info-close" id="info-close">✕</button>
+  <div class="info-flag" id="info-flag"></div>
+  <div class="info-name" id="info-name"></div>
+  <div class="info-native" id="info-native"></div>
+  <table class="info-table" id="info-table"></table>
+</div>
+
+<!-- Legend -->
+<div class="legend">
+  <div class="legend-title">Population</div>
+  <div class="legend-row"><div class="legend-box" style="background:#fffde7;border:1px solid #ccc"></div> &lt; 1M</div>
+  <div class="legend-row"><div class="legend-box" style="background:#fff176"></div> 1M – 5M</div>
+  <div class="legend-row"><div class="legend-box" style="background:#ffee58"></div> 5M – 20M</div>
+  <div class="legend-row"><div class="legend-box" style="background:#ffc107"></div> 20M – 50M</div>
+  <div class="legend-row"><div class="legend-box" style="background:#ff9800"></div> 50M – 100M</div>
+  <div class="legend-row"><div class="legend-box" style="background:#f57c00"></div> 100M – 500M</div>
+  <div class="legend-row"><div class="legend-box" style="background:#e65100"></div> &gt; 500M</div>
+</div>
+
+<!-- Zoom controls -->
+<div class="controls">
+  <button class="ctrl-btn" id="zoom-in" title="Zoom in">+</button>
+  <button class="ctrl-btn" id="zoom-out" title="Zoom out">−</button>
+  <button class="ctrl-btn" id="zoom-reset" title="Reset view">⟲</button>
+</div>
+
+<!-- D3.js (v7 — free, BSD license) -->
+<script src="https://d3js.org/d3.v7.min.js"></script>
+
+<script>
+  // ========================================
+  // World Map with D3.js + REST Countries API
+  // ========================================
+
+  const svg = d3.select('#map-svg');
+  const g   = svg.append('g');
+
+  // Country data from REST Countries API (keyed by 3-letter code)
+  let countryData = {};
+
+  // ---- Projection & path generator ----
+  const mapContainer = document.getElementById('map-container');
+  const cw = mapContainer.clientWidth;
+  const ch = mapContainer.clientHeight;
+  const projection = d3.geoMercator()
+    .scale(cw / 6.5)
+    .translate([cw / 2, ch * 0.6]);
+
+  const path = d3.geoPath().projection(projection);
+
+  // ---- Zoom behavior ----
+  const zoom = d3.zoom()
+    .scaleExtent([1, 8])
+    .on('zoom', function(event) {
+      g.attr('transform', event.transform);
+    });
+
+  svg.call(zoom);
+
+  // Zoom buttons
+  document.getElementById('zoom-in').addEventListener('click', function() {
+    svg.transition().duration(300).call(zoom.scaleBy, 1.5);
+  });
+  document.getElementById('zoom-out').addEventListener('click', function() {
+    svg.transition().duration(300).call(zoom.scaleBy, 0.67);
+  });
+  document.getElementById('zoom-reset').addEventListener('click', function() {
+    svg.transition().duration(500).call(zoom.transform, d3.zoomIdentity);
+  });
+
+  // ---- Population → color class ----
+  function popClass(pop) {
+    if (pop == null) return 'pop-1';
+    if (pop < 1000000)    return 'pop-1';
+    if (pop < 5000000)    return 'pop-2';
+    if (pop < 20000000)   return 'pop-3';
+    if (pop < 50000000)   return 'pop-4';
+    if (pop < 100000000)  return 'pop-5';
+    if (pop < 500000000)  return 'pop-6';
+    return 'pop-7';
+  }
+
+  // ---- Tooltip ----
+  const tooltip = document.getElementById('tooltip');
+
+  function showTooltip(event, d) {
+    const info = countryData[d.id] || countryData[d.properties.name];
+    if (!info) {
+      document.getElementById('tt-flag').textContent = '';
+      document.getElementById('tt-name').textContent = d.properties.name || 'Unknown';
+      document.getElementById('tt-capital').textContent = '—';
+      document.getElementById('tt-pop').textContent = '—';
+      document.getElementById('tt-region').textContent = '—';
+    } else {
+      document.getElementById('tt-flag').textContent = info.flag || '';
+      document.getElementById('tt-name').textContent = info.name;
+      document.getElementById('tt-capital').textContent = info.capital || '—';
+      document.getElementById('tt-pop').textContent = info.population ? info.population.toLocaleString() : '—';
+      document.getElementById('tt-region').textContent = info.region || '—';
+    }
+    tooltip.classList.add('visible');
+    tooltip.style.left = (event.clientX + 16) + 'px';
+    tooltip.style.top  = (event.clientY - 10) + 'px';
+  }
+
+  function moveTooltip(event) {
+    tooltip.style.left = (event.clientX + 16) + 'px';
+    tooltip.style.top  = (event.clientY - 10) + 'px';
+  }
+
+  function hideTooltip() {
+    tooltip.classList.remove('visible');
+  }
+
+  // ---- Info panel (click) ----
+  function showInfoPanel(d) {
+    const info = countryData[d.id] || countryData[d.properties.name];
+    if (!info) return;
+
+    document.getElementById('info-flag').textContent   = info.flag || '';
+    document.getElementById('info-name').textContent   = info.name;
+    document.getElementById('info-native').textContent = info.nativeName || '';
+
+    const rows = [
+      ['Capital',     info.capital || '—'],
+      ['Region',      info.region + (info.subregion ? ' — ' + info.subregion : '')],
+      ['Population',  info.population ? info.population.toLocaleString() : '—'],
+      ['Languages',   info.languages || '—'],
+      ['Currencies',  info.currencies || '—'],
+      ['Timezone',    info.timezone || '—'],
+    ];
+
+    const table = document.getElementById('info-table');
+    table.innerHTML = rows.map(function(r) {
+      return '<tr><td>' + r[0] + '</td><td>' + r[1] + '</td></tr>';
+    }).join('');
+
+    document.getElementById('info-panel').classList.add('visible');
+  }
+
+  document.getElementById('info-close').addEventListener('click', function() {
+    document.getElementById('info-panel').classList.remove('visible');
+  });
+
+  // ---- Load data & draw map ----
+  async function init() {
+    const loadingEl = document.getElementById('loading');
+    try {
+      // Load GeoJSON and country data in parallel
+      // Using relative path so it works both locally and on GitHub Pages
+      const [geoData, countriesRaw] = await Promise.all([
+        d3.json('../../d3/data/world.geojson'),
+        fetch('https://restcountries.com/v3.1/all?fields=name,capital,population,region,subregion,flag,cca3,languages,currencies,timezones')
+          .then(function(r) {
+            if (!r.ok) throw new Error('REST Countries API error: ' + r.status);
+            return r.json();
+          })
+      ]);
+
+    // Build lookup by 3-letter code AND by name
+    countriesRaw.forEach(function(c) {
+      const entry = {
+        name:       c.name.common,
+        nativeName: (Object.values(c.name.nativeName || {})[0] || {}).common || '',
+        capital:    (c.capital || [])[0] || '',
+        population: c.population,
+        region:     c.region,
+        subregion:  c.subregion || '',
+        flag:       c.flag || '',
+          languages:  c.languages ? Object.values(c.languages).join(', ') : '',
+        currencies: c.currencies ? Object.values(c.currencies).map(function(cur) { return cur.name; }).join(', ') : '',
+        timezone:   (c.timezones || [])[0] || '',
+      };
+      countryData[c.cca3] = entry;       // e.g. "USA"
+      countryData[c.name.common] = entry; // e.g. "United States"
+    });
+
+    // Draw countries
+    g.selectAll('path')
+      .data(geoData.features)
+      .enter()
+      .append('path')
+      .attr('d', path)
+      .attr('class', function(d) {
+        const info = countryData[d.id] || countryData[d.properties.name];
+        return 'country-path ' + popClass(info ? info.population : null);
+      })
+      .on('mouseover', function(event, d) { showTooltip(event, d); })
+      .on('mousemove', function(event)    { moveTooltip(event); })
+      .on('mouseout',  function()          { hideTooltip(); })
+      .on('click',     function(event, d)  { showInfoPanel(d); });
+
+      loadingEl.style.display = 'none';
+    } catch (err) {
+      loadingEl.textContent = 'Error loading map: ' + err.message;
+      loadingEl.style.color = '#e17055';
+      console.error(err);
+    }
+  }
+
+  init();
+</script>
+
+</body>
+</html>

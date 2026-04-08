@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>Image Slideshow</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      background: #1a1a2e;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-family: Arial, sans-serif;
+      padding: 24px;
+    }
+
+    h1 {
+      color: white;
+      font-size: 1.4rem;
+      margin-bottom: 24px;
+      letter-spacing: 0.05em;
+    }
+
+    /* ---- Slideshow container ---- */
+    .slideshow {
+      position: relative;
+      width: min(1000px, 95vw);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+    }
+
+    /* Each slide */
+    .slide {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 0.8s ease;  /* fade in/out */
+    }
+    .slide.active { opacity: 1; position: relative; }
+
+    .slide img {
+      width: 100%;
+      height: 600px;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Caption overlay */
+    .caption {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 20px 24px;
+      background: linear-gradient(transparent, rgba(0,0,0,0.75));
+      color: white;
+    }
+    .caption h3 { font-size: 1.1rem; margin-bottom: 4px; }
+    .caption p  { font-size: 0.85rem; opacity: 0.8; }
+
+    /* Arrow buttons */
+    .arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0,0,0,0.5);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 44px;
+      height: 44px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      z-index: 10;
+      transition: background 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .arrow:hover { background: rgba(0,0,0,0.8); }
+    .arrow-left  { left: 12px; }
+    .arrow-right { right: 12px; }
+
+    /* Dot indicators */
+    .dots {
+      display: flex;
+      gap: 8px;
+      margin-top: 20px;
+      justify-content: center;
+    }
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.3);
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .dot.active {
+      background: white;
+      transform: scale(1.3);
+    }
+
+    /* Controls */
+    .controls {
+      margin-top: 16px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    .ctrl-btn {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.4);
+      color: rgba(255,255,255,0.7);
+      padding: 6px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all 0.15s;
+    }
+    .ctrl-btn:hover { border-color: white; color: white; }
+
+    .speed-label {
+      color: rgba(255,255,255,0.6);
+      font-size: 0.82rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    input[type=range] { accent-color: #00b7ff; }
+  </style>
+</head>
+<body>
+<style>
+  .wc-nav { position: fixed; top: 12px; left: 12px; display: flex; gap: 8px; z-index: 1000; }
+  .wc-nav a { background: rgba(0,0,0,0.65); color: white; text-decoration: none; padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-family: Arial, sans-serif; backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.15); }
+  .wc-nav a:hover { background: rgba(0,0,0,0.9); }
+</style>
+<nav class="wc-nav">
+  <a href="/">&#127968; Home</a>
+  <a href="/web-craft/">&#8592; Examples</a>
+</nav>
+
+<h1>Image Slideshow</h1>
+
+<div class="slideshow" id="slideshow">
+
+  <!-- Slides are built by JavaScript below -->
+
+  <button class="arrow arrow-left"  id="prev">&#8592;</button>
+  <button class="arrow arrow-right" id="next">&#8594;</button>
+</div>
+
+<div class="dots" id="dots"></div>
+
+<div class="controls">
+  <button class="ctrl-btn" id="btn-play">Pause</button>
+  <label class="speed-label">
+    Speed: <input type="range" id="speed" min="1000" max="6000" step="500" value="3000">
+  </label>
+</div>
+
+<script>
+  // ---- Slide data ----
+  // Images are stored locally in the images/ folder.
+  // Replace src with your own photos!
+  const slides = [
+    {
+      src: 'images/sea_cave.jpg',
+      title: 'Sea Cave',
+      desc: ''
+    },
+    {
+      src: 'images/milky_way.jpg',
+      title: 'Milky Way',
+      desc: ''
+    },
+    {
+      src: 'images/mount_everest.jpg',
+      title: 'Mount Everest',
+      desc: ''
+    },
+    {
+      src: 'images/uluru.jpg',
+      title: 'Uluru',
+      desc: ''
+    },
+  ];
+
+  const slideshowEl = document.getElementById('slideshow');
+  const dotsEl      = document.getElementById('dots');
+  let current  = 0;
+  let playing  = true;
+  let interval = null;
+
+  // ---- Build slide elements ----
+  const slideEls = slides.map(function(slide, i) {
+    const div = document.createElement('div');
+    div.className = 'slide' + (i === 0 ? ' active' : '');
+    div.innerHTML =
+      '<img src="' + slide.src + '" alt="' + slide.title + '">' +
+      '<div class="caption"><h3>' + slide.title + '</h3><p>' + slide.desc + '</p></div>';
+    // Insert before the arrows
+    slideshowEl.insertBefore(div, document.getElementById('prev'));
+    return div;
+  });
+
+  // ---- Build dot indicators ----
+  const dotEls = slides.map(function(_, i) {
+    const dot = document.createElement('div');
+    dot.className = 'dot' + (i === 0 ? ' active' : '');
+    dot.addEventListener('click', function() { goTo(i); });
+    dotsEl.appendChild(dot);
+    return dot;
+  });
+
+  // ---- Go to a specific slide ----
+  function goTo(index) {
+    slideEls[current].classList.remove('active');
+    dotEls[current].classList.remove('active');
+    current = (index + slides.length) % slides.length;
+    slideEls[current].classList.add('active');
+    dotEls[current].classList.add('active');
+  }
+
+  // ---- Auto-play ----
+  function startPlay() {
+    clearInterval(interval);
+    interval = setInterval(function() { goTo(current + 1); }, getSpeed());
+  }
+
+  function getSpeed() {
+    return parseInt(document.getElementById('speed').value);
+  }
+
+  // ---- Controls ----
+  document.getElementById('prev').addEventListener('click', function() {
+    goTo(current - 1);
+    if (playing) startPlay(); // reset timer
+  });
+  document.getElementById('next').addEventListener('click', function() {
+    goTo(current + 1);
+    if (playing) startPlay();
+  });
+
+  document.getElementById('btn-play').addEventListener('click', function() {
+    playing = !playing;
+    this.textContent = playing ? 'Pause' : 'Play';
+    if (playing) { startPlay(); } else { clearInterval(interval); }
+  });
+
+  document.getElementById('speed').addEventListener('input', function() {
+    if (playing) startPlay();
+  });
+
+  startPlay();
+</script>
+
+</body>
+</html>

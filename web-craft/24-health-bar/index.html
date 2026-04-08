@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>Virtual Pet &amp; Plant</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f4f8;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 80px 24px 60px;
+      min-height: 100vh;
+    }
+
+    h1 { font-size: 1.8rem; color: #222; margin-bottom: 40px; }
+
+    .card {
+      background: white;
+      border-radius: 20px;
+      padding: 32px;
+      margin-bottom: 24px;
+      width: 320px;
+      text-align: center;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    }
+
+    .big-emoji {
+      font-size: 5rem;
+      line-height: 1;
+      margin-bottom: 8px;
+      transition: transform 0.2s;
+    }
+    .big-emoji.shake {
+      animation: shake 0.4s;
+    }
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      25%      { transform: translateX(-6px); }
+      75%      { transform: translateX(6px); }
+    }
+
+    .speech {
+      font-size: 0.9rem;
+      color: #888;
+      min-height: 1.4em;
+      margin-bottom: 20px;
+    }
+
+    .bar-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #aaa;
+      text-align: left;
+      margin-bottom: 6px;
+    }
+    .bar-track {
+      background: #e8edf2;
+      border-radius: 10px;
+      height: 18px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+    .bar-fill {
+      height: 100%;
+      border-radius: 10px;
+      transition: width 0.6s, background-color 0.6s;
+    }
+
+    button {
+      padding: 12px 32px;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      color: white;
+      transition: transform 0.1s;
+    }
+    button:active { transform: scale(0.95); }
+  </style>
+</head>
+<body>
+
+<style>
+  .wc-nav { position: fixed; top: 12px; left: 12px; display: flex; gap: 8px; z-index: 1000; }
+  .wc-nav a { background: rgba(0,0,0,0.65); color: white; text-decoration: none; padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-family: Arial, sans-serif; backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.15); }
+  .wc-nav a:hover { background: rgba(0,0,0,0.9); }
+</style>
+<nav class="wc-nav">
+  <a href="/">&#127968; Home</a>
+  <a href="/web-craft/">&#8592; Examples</a>
+</nav>
+
+<h1>🌱 Virtual Pet &amp; Plant</h1>
+
+<!-- Dog -->
+<div class="card">
+  <div class="big-emoji" id="dog-emoji">🐶</div>
+  <div class="speech" id="dog-speech">I'm happy! 😊</div>
+  <div class="bar-label">Hunger</div>
+  <div class="bar-track">
+    <div class="bar-fill" id="hunger-bar"></div>
+  </div>
+  <button onclick="feed()" style="background: #ff9800;">Feed 🍖</button>
+</div>
+
+<!-- Tree -->
+<div class="card">
+  <div class="big-emoji" id="tree-emoji">🌳</div>
+  <div class="speech" id="tree-speech">I'm growing well! 🌿</div>
+  <div class="bar-label">Water</div>
+  <div class="bar-track">
+    <div class="bar-fill" id="water-bar"></div>
+  </div>
+  <button onclick="giveWater()" style="background: #2196f3;">Water 💧</button>
+</div>
+
+<script>
+  let hunger   = 80;
+  let moisture = 80;
+
+  function render() {
+    // --- Dog ---
+    const hBar = document.getElementById('hunger-bar');
+    hBar.style.width = hunger + '%';
+    hBar.style.backgroundColor = hunger > 50 ? '#4caf50' : hunger > 25 ? '#ff9800' : '#f44336';
+
+    const dogEmoji   = document.getElementById('dog-emoji');
+    const dogSpeech  = document.getElementById('dog-speech');
+    if (hunger > 70) {
+      dogEmoji.textContent  = '🐶';
+      dogSpeech.textContent = "I'm happy! 😊";
+    } else if (hunger > 40) {
+      dogEmoji.textContent  = '🐶';
+      dogSpeech.textContent = "I'm getting hungry… 😐";
+    } else if (hunger > 0) {
+      dogEmoji.textContent  = '🥺';
+      dogSpeech.textContent = "Please feed me! I'm starving! 😭";
+    } else {
+      dogEmoji.textContent  = '😵';
+      dogSpeech.textContent = "I'm so hungry I can't move… 😵";
+    }
+
+    // --- Tree ---
+    const wBar = document.getElementById('water-bar');
+    wBar.style.width = moisture + '%';
+    wBar.style.backgroundColor = moisture > 50 ? '#2196f3' : moisture > 25 ? '#ff9800' : '#f44336';
+
+    const treeEmoji  = document.getElementById('tree-emoji');
+    const treeSpeech = document.getElementById('tree-speech');
+    if (moisture > 70) {
+      treeEmoji.textContent  = '🌳';
+      treeSpeech.textContent = "I'm growing well! 🌿";
+    } else if (moisture > 40) {
+      treeEmoji.textContent  = '🌲';
+      treeSpeech.textContent = "I could use some water… 🌧️";
+    } else if (moisture > 0) {
+      treeEmoji.textContent  = '🍂';
+      treeSpeech.textContent = "I'm drying out! Water me! 🥵";
+    } else {
+      treeEmoji.textContent  = '🪨';
+      treeSpeech.textContent = "I'm completely dry… 😵";
+    }
+  }
+
+  function feed() {
+    hunger = Math.min(100, hunger + 30);
+    const el = document.getElementById('dog-emoji');
+    el.classList.remove('shake');
+    void el.offsetWidth;
+    el.classList.add('shake');
+    render();
+  }
+
+  function giveWater() {
+    moisture = Math.min(100, moisture + 30);
+    const el = document.getElementById('tree-emoji');
+    el.classList.remove('shake');
+    void el.offsetWidth;
+    el.classList.add('shake');
+    render();
+  }
+
+  setInterval(function() {
+    hunger   = Math.max(0, hunger - 1);
+    moisture = Math.max(0, moisture - 0.7);
+    render();
+  }, 200);
+
+  render();
+</script>
+
+</body>
+</html>

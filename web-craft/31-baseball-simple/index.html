@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>Baseball</title>
+  <meta charset="utf-8">
+  <style>
+    body   { font-family: Arial; text-align: center; padding: 80px; background: #2d5a27; color: white; }
+    p      { font-size: 2.5rem; margin: 16px; }
+    button { font-size: 1.2rem; padding: 12px 28px; margin: 8px; cursor: pointer; border: none; border-radius: 8px; }
+  </style>
+</head>
+<body>
+
+  <h1>⚾ Baseball</h1>
+  <p>Balls: <b id="b">0</b></p>
+  <p>Strikes: <b id="s">0</b></p>
+
+  <button style="background:#0652DD; color:white;" onclick="add('b')">Ball</button>
+  <button style="background:#e74c3c; color:white;" onclick="add('s')">Strike</button>
+  <button style="background:#555; color:white;"    onclick="location.reload()">New Batter</button>
+
+  <script>
+    function add(id) {
+      let el = document.getElementById(id);
+      el.textContent = Number(el.textContent) + 1;
+    }
+  </script>
+
+</body>
+</html>

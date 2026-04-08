@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>Gradient Generator</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      font-family: Arial, sans-serif;
+      /* background is set by JS */
+      transition: background 0.3s;
+    }
+
+    /* ---- Preview covers whole page ---- */
+    #preview {
+      flex: 1;
+      min-height: 60vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: background 0.3s;
+    }
+
+    #preview h1 {
+      color: white;
+      font-size: clamp(1.5rem, 5vw, 3rem);
+      text-shadow: 0 2px 12px rgba(0,0,0,0.3);
+      text-align: center;
+      padding: 16px;
+    }
+
+    /* ---- Control panel ---- */
+    .panel {
+      background: rgba(255,255,255,0.95);
+      padding: 24px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      align-items: flex-start;
+      justify-content: center;
+    }
+
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      min-width: 160px;
+    }
+
+    label {
+      font-size: 0.82rem;
+      font-weight: bold;
+      color: #636e72;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    input[type="color"] {
+      width: 60px;
+      height: 40px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      padding: 2px;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: #00b7ff;
+    }
+
+    select {
+      padding: 8px;
+      border: 1px solid #dfe6e9;
+      border-radius: 6px;
+      font-size: 0.9rem;
+    }
+
+    /* CSS code output */
+    .code-box {
+      background: #2d3436;
+      color: #00ff88;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.82rem;
+      white-space: nowrap;
+      overflow-x: auto;
+      width: 100%;
+      max-width: 600px;
+      cursor: pointer;
+      position: relative;
+    }
+    .code-box:hover::after {
+      content: 'Click to copy';
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: #00b7ff;
+      color: white;
+      font-size: 0.75rem;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-family: Arial, sans-serif;
+    }
+
+    .copied-msg {
+      font-size: 0.82rem;
+      color: #00b894;
+      text-align: center;
+      min-height: 20px;
+    }
+
+    /* Preset buttons */
+    .presets {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .preset-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: transform 0.15s, border-color 0.15s;
+    }
+    .preset-btn:hover { transform: scale(1.1); border-color: #2d3436; }
+  </style>
+</head>
+<body>
+<style>
+  .wc-nav { position: fixed; top: 12px; left: 12px; display: flex; gap: 8px; z-index: 1000; }
+  .wc-nav a { background: rgba(0,0,0,0.65); color: white; text-decoration: none; padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-family: Arial, sans-serif; backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.15); }
+  .wc-nav a:hover { background: rgba(0,0,0,0.9); }
+</style>
+<nav class="wc-nav">
+  <a href="/">&#127968; Home</a>
+  <a href="/web-craft/">&#8592; Examples</a>
+</nav>
+
+<div id="preview">
+  <h1 id="preview-text">Gradient Generator</h1>
+</div>
+
+<div class="panel">
+
+  <div class="control-group">
+    <label>Color 1</label>
+    <input type="color" id="color1" value="#00b7ff">
+  </div>
+
+  <div class="control-group">
+    <label>Color 2</label>
+    <input type="color" id="color2" value="#6c5ce7">
+  </div>
+
+  <div class="control-group">
+    <label>Direction</label>
+    <select id="direction">
+      <option value="to right">→ Left to Right</option>
+      <option value="to left">← Right to Left</option>
+      <option value="to bottom">↓ Top to Bottom</option>
+      <option value="to top">↑ Bottom to Top</option>
+      <option value="to bottom right">↘ Diagonal</option>
+      <option value="135deg">↙ Other Diagonal</option>
+    </select>
+  </div>
+
+  <div class="control-group" style="min-width:200px;">
+    <label>Color 1 Position: <span id="pos1-val">0</span>%</label>
+    <input type="range" id="pos1" min="0" max="50" value="0">
+    <label>Color 2 Position: <span id="pos2-val">100</span>%</label>
+    <input type="range" id="pos2" min="50" max="100" value="100">
+  </div>
+
+  <div class="control-group" style="min-width:200px;">
+    <label>Presets</label>
+    <div class="presets" id="presets"></div>
+  </div>
+
+  <div class="code-box" id="code-box" title="Click to copy">loading…</div>
+  <div class="copied-msg" id="copied-msg"></div>
+
+</div>
+
+<script>
+  const presets = [
+    { c1:'#00b7ff', c2:'#6c5ce7' },
+    { c1:'#fd79a8', c2:'#e17055' },
+    { c1:'#55efc4', c2:'#0984e3' },
+    { c1:'#fdcb6e', c2:'#e17055' },
+    { c1:'#a29bfe', c2:'#fd79a8' },
+    { c1:'#00cec9', c2:'#55efc4' },
+    { c1:'#1e3c72', c2:'#2a5298' },
+    { c1:'#f9ca24', c2:'#f0932b' },
+  ];
+
+  // Build preset buttons
+  const presetsEl = document.getElementById('presets');
+  presets.forEach(function(p) {
+    const btn = document.createElement('button');
+    btn.className = 'preset-btn';
+    btn.style.background = 'linear-gradient(to right, ' + p.c1 + ', ' + p.c2 + ')';
+    btn.addEventListener('click', function() {
+      document.getElementById('color1').value = p.c1;
+      document.getElementById('color2').value = p.c2;
+      updateGradient();
+    });
+    presetsEl.appendChild(btn);
+  });
+
+  function updateGradient() {
+    const c1  = document.getElementById('color1').value;
+    const c2  = document.getElementById('color2').value;
+    const dir = document.getElementById('direction').value;
+    const p1  = document.getElementById('pos1').value;
+    const p2  = document.getElementById('pos2').value;
+
+    document.getElementById('pos1-val').textContent = p1;
+    document.getElementById('pos2-val').textContent = p2;
+
+    const css = 'linear-gradient(' + dir + ', ' + c1 + ' ' + p1 + '%, ' + c2 + ' ' + p2 + '%)';
+
+    document.getElementById('preview').style.background = css;
+    document.getElementById('code-box').textContent = 'background: ' + css + ';';
+  }
+
+  // Listen for changes on all controls
+  ['color1','color2','direction','pos1','pos2'].forEach(function(id) {
+    document.getElementById(id).addEventListener('input', updateGradient);
+  });
+
+  // Click to copy the CSS
+  document.getElementById('code-box').addEventListener('click', function() {
+    const text = this.textContent;
+    navigator.clipboard.writeText(text).then(function() {
+      const msg = document.getElementById('copied-msg');
+      msg.textContent = 'Copied to clipboard!';
+      setTimeout(function() { msg.textContent = ''; }, 2000);
+    });
+  });
+
+  updateGradient(); // draw initial state
+</script>
+
+</body>
+</html>

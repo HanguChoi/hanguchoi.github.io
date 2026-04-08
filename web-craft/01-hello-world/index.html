@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>Hello World</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    /* ---- Reset ---- */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ---- Page background ---- */
+    body {
+      background-color: #ffeaa7;   /* try changing this color! */
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    /* ---- The card in the center ---- */
+    .card {
+      background: white;
+      border-radius: 20px;
+      padding: 48px 56px;
+      text-align: center;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+      max-width: 480px;
+      width: 90%;
+    }
+
+    /* ---- Big greeting ---- */
+    h1 {
+      font-size: 3rem;          /* try 2rem, 5rem … */
+      color: #e17055;           /* try #6c5ce7, #00b7ff … */
+      margin-bottom: 16px;
+    }
+
+    /* ---- Sub-title ---- */
+    h2 {
+      font-size: 1.2rem;
+      color: #636e72;
+      font-weight: normal;
+      margin-bottom: 24px;
+    }
+
+    /* ---- Paragraph ---- */
+    p {
+      font-size: 1rem;
+      color: #2d3436;
+      line-height: 1.7;
+      margin-bottom: 16px;
+    }
+
+    /* ---- Highlighted text ---- */
+    .highlight {
+      background: #ffeaa7;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-weight: bold;
+    }
+
+    /* ---- Emoji row ---- */
+    .emoji-row {
+      font-size: 2rem;
+      margin-top: 24px;
+      letter-spacing: 8px;
+    }
+
+    /* ---- Emoji links ---- */
+    .emoji-links {
+      margin-top: 20px;
+      font-size: 0.8rem;
+      color: #b2bec3;
+    }
+    .emoji-links a {
+      color: #00b7ff;
+      text-decoration: none;
+      margin: 0 6px;
+    }
+    .emoji-links a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+<style>
+  .wc-nav { position: fixed; top: 12px; left: 12px; display: flex; gap: 8px; z-index: 1000; }
+  .wc-nav a { background: rgba(0,0,0,0.65); color: white; text-decoration: none; padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-family: Arial, sans-serif; backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.15); }
+  .wc-nav a:hover { background: rgba(0,0,0,0.9); }
+</style>
+<nav class="wc-nav">
+  <a href="/">&#127968; Home</a>
+  <a href="/web-craft/">&#8592; Examples</a>
+</nav>
+
+  <div class="card">
+    <h1>Hello, World! 🌍</h1>
+    <h2>Welcome to my first webpage</h2>
+
+    <p>
+      My name is <span class="highlight">Your Name Here</span>.
+      I'm learning how to build websites with
+      <strong>HTML</strong>, <strong>CSS</strong>, and <strong>JavaScript</strong>.
+    </p>
+
+    <p>
+      This page is made of just three things:
+      <em>structure</em> (HTML),
+      <em>style</em> (CSS), and
+      <em>behavior</em> (JavaScript).
+    </p>
+
+    <div class="emoji-row">🚀 🎨 💻</div>
+
+    <div class="emoji-links">
+      Find more emoji →
+      <a href="https://emojipedia.org" target="_blank" rel="noopener noreferrer">Emojipedia</a>
+      <a href="https://www.emojiall.com" target="_blank" rel="noopener noreferrer">EmojiAll</a>
+      <a href="https://getemoji.com" target="_blank" rel="noopener noreferrer">Get Emoji</a>
+    </div>
+  </div>
+
+</body>
+</html>
