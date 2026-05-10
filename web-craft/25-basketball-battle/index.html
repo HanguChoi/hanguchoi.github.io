@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>Basketball Battle</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: radial-gradient(ellipse at top, #2a1000 0%, #0d0600 100%);
+      font-family: 'Arial Black', Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 80px 20px 60px;
+      color: white;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      color: #ff8c00;
+      text-shadow: 0 2px 20px rgba(255,140,0,0.5);
+      margin-bottom: 6px;
+      text-align: center;
+    }
+
+    .subtitle {
+      font-size: 0.8rem;
+      color: #666;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      font-family: Arial, sans-serif;
+      margin-bottom: 20px;
+    }
+
+    .game-timer {
+      font-size: 2.4rem;
+      font-weight: 900;
+      color: white;
+      margin-bottom: 24px;
+      text-align: center;
+      min-width: 60px;
+    }
+    .game-timer.urgent { color: #e74c3c; animation: blink 0.5s infinite alternate; }
+    @keyframes blink { to { opacity: 0.35; } }
+
+    /* === SCOREBOARD === */
+    .scoreboard {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,140,0,0.2);
+      border-radius: 20px;
+      padding: 20px 24px;
+      margin-bottom: 18px;
+      width: 100%;
+      max-width: 380px;
+    }
+
+    .team { flex: 1; text-align: center; }
+
+    .team-icon { font-size: 2.6rem; line-height: 1; margin-bottom: 6px; }
+    .team-name {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #888;
+      font-family: Arial, sans-serif;
+      margin-bottom: 6px;
+    }
+    .score {
+      font-size: 3.6rem;
+      font-weight: 900;
+      line-height: 1;
+      display: inline-block;
+    }
+    .team.mine .score { color: #f9ca24; }
+    .team.cpu  .score { color: #e74c3c; }
+
+    .score.pop { animation: scorePop 0.3s ease; }
+    @keyframes scorePop {
+      0%,100% { transform: scale(1); }
+      50%      { transform: scale(1.35); }
+    }
+
+    .vs-sep { font-size: 1rem; color: #444; font-weight: 900; }
+
+    /* === MESSAGE FEED === */
+    .message {
+      width: 100%;
+      max-width: 380px;
+      min-height: 52px;
+      background: rgba(255,255,255,0.04);
+      border-radius: 14px;
+      padding: 12px 16px;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #bbb;
+      margin-bottom: 28px;
+      border: 1px solid rgba(255,255,255,0.07);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: Arial, sans-serif;
+      transition: background 0.2s;
+    }
+    .message.flash {
+      animation: msgFlash 0.45s ease;
+    }
+    @keyframes msgFlash {
+      0%,100% { background: rgba(255,255,255,0.04); }
+      40%     { background: rgba(255,140,0,0.18); }
+    }
+
+    /* === COURT + BUTTON === */
+    .court {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      margin-bottom: 14px;
+    }
+
+    .player { font-size: 2.6rem; display: block; }
+    .player.bounce { animation: jump 0.4s ease; }
+    @keyframes jump {
+      0%,100% { transform: translateY(0); }
+      45%     { transform: translateY(-18px); }
+    }
+
+    .shoot-btn {
+      width: 155px;
+      height: 155px;
+      border-radius: 50%;
+      background: linear-gradient(145deg, #ff8c00, #c44d00);
+      border: 4px solid rgba(255,255,255,0.12);
+      font-size: 3rem;
+      cursor: pointer;
+      box-shadow: 0 6px 30px rgba(255,140,0,0.45);
+      transition: transform 0.1s, box-shadow 0.1s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      user-select: none;
+    }
+    .shoot-btn .btn-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: white;
+      font-family: Arial, sans-serif;
+      letter-spacing: 1.5px;
+    }
+    .shoot-btn:hover:not(:disabled) {
+      transform: scale(1.07);
+      box-shadow: 0 10px 40px rgba(255,140,0,0.6);
+    }
+    .shoot-btn:active:not(:disabled) { transform: scale(0.9); }
+    .shoot-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none !important;
+      box-shadow: none;
+    }
+
+    /* Cooldown bar */
+    .cooldown-track {
+      width: 155px;
+      height: 6px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .cooldown-fill {
+      height: 100%;
+      background: #ff8c00;
+      border-radius: 3px;
+      width: 100%;
+      transition: width 0.08s linear;
+    }
+    .cooldown-label {
+      font-size: 0.78rem;
+      color: #777;
+      margin-top: 6px;
+      text-align: center;
+      min-height: 1.1em;
+      font-family: Arial, sans-serif;
+    }
+
+    /* === GAME OVER OVERLAY === */
+    .overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.82);
+      z-index: 50;
+      align-items: center;
+      justify-content: center;
+    }
+    .overlay.show { display: flex; }
+
+    .result-card {
+      background: #180900;
+      border: 2px solid #ff8c00;
+      border-radius: 24px;
+      padding: 40px 52px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: center;
+    }
+    .result-card h2 { font-size: 2.4rem; color: #f9ca24; }
+    .result-msg  { font-size: 1.5rem; }
+    .final-score { font-size: 1rem; color: #888; font-family: Arial, sans-serif; }
+
+    .restart-btn {
+      margin-top: 6px;
+      background: #ff8c00;
+      border: none;
+      border-radius: 30px;
+      padding: 12px 36px;
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 700;
+      color: white;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .restart-btn:hover  { background: #c44d00; }
+    .restart-btn:active { transform: scale(0.95); }
+
+  .wc-nav { position: fixed; top: 12px; left: 12px; display: flex; gap: 8px; z-index: 1000; }
+  .wc-nav a { background: rgba(0,0,0,0.65); color: white; text-decoration: none; padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-family: Arial, sans-serif; backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.15); }
+  .wc-nav a:hover { background: rgba(0,0,0,0.9); }
+</style>
+</head>
+<body>
+
+<nav class="wc-nav">
+  <a href="/">&#127968; Home</a>
+  <a href="/web-craft/">&#8592; Examples</a>
+</nav>
+
+<h1>🏀 Basketball Battle</h1>
+<div class="subtitle">60 second game</div>
+
+<div class="game-timer" id="game-timer">60</div>
+
+<div class="scoreboard">
+  <div class="team mine">
+    <div class="team-icon">👦</div>
+    <div class="team-name">Your Team</div>
+    <div class="score" id="my-score">0</div>
+  </div>
+  <div class="vs-sep">VS</div>
+  <div class="team cpu">
+    <div class="team-icon">🤖</div>
+    <div class="team-name">CPU Team</div>
+    <div class="score" id="cpu-score">0</div>
+  </div>
+</div>
+
+<div class="message" id="message">🏀 Press SHOOT to start the game!</div>
+
+<div class="court">
+  <span class="player" id="player-l">🏃</span>
+
+  <div style="display:flex;flex-direction:column;align-items:center;gap:10px;">
+    <button class="shoot-btn" id="shoot-btn" onclick="shoot()">
+      🏀
+      <span class="btn-label">SHOOT!</span>
+    </button>
+    <div class="cooldown-track">
+      <div class="cooldown-fill" id="cd-fill"></div>
+    </div>
+    <div class="cooldown-label" id="cd-label">Tap to start!</div>
+  </div>
+
+  <span class="player" id="player-r">🤖</span>
+</div>
+
+<!-- Game Over overlay -->
+<div class="overlay" id="overlay">
+  <div class="result-card">
+    <h2 id="result-title"></h2>
+    <div class="result-msg"  id="result-msg"></div>
+    <div class="final-score" id="result-score"></div>
+    <button class="restart-btn" onclick="restart()">🔄 Play Again</button>
+  </div>
+</div>
+
+<script>
+  const GAME_SECS     = 60;
+  const CPU_MS        = 2000;   // CPU scores every 2 seconds
+  const COOLDOWN_MS   = 2500;   // button cooldown after each shot
+
+  let myPts  = 0;
+  let cpuPts = 0;
+  let timeLeft = GAME_SECS;
+  let gameOn   = false;
+
+  let clockInterval = null;
+  let cpuInterval   = null;
+  let cdRaf         = null;
+  let cdEnd         = 0;
+
+  const timerEl    = document.getElementById('game-timer');
+  const myScoreEl  = document.getElementById('my-score');
+  const cpuScoreEl = document.getElementById('cpu-score');
+  const msgEl      = document.getElementById('message');
+  const shootBtn   = document.getElementById('shoot-btn');
+  const cdFill     = document.getElementById('cd-fill');
+  const cdLabel    = document.getElementById('cd-label');
+  const overlay    = document.getElementById('overlay');
+  const playerL    = document.getElementById('player-l');
+  const playerR    = document.getElementById('player-r');
+
+  function startGame() {
+    gameOn = true;
+
+    clockInterval = setInterval(() => {
+      timeLeft--;
+      timerEl.textContent = timeLeft;
+      if (timeLeft <= 10) timerEl.classList.add('urgent');
+      if (timeLeft <= 0)  endGame();
+    }, 1000);
+
+    cpuInterval = setInterval(cpuShoot, CPU_MS);
+  }
+
+  function cpuShoot() {
+    const pts = randPts();
+    cpuPts += pts;
+    cpuScoreEl.textContent = cpuPts;
+    popEl(cpuScoreEl);
+    bounceEl(playerR);
+
+    const labels = { 1: 'a free throw 🏀', 2: 'a 2-pointer!', 3: 'a 3-pointer!! 🔥' };
+    showMsg(`🤖 CPU Team scored ${labels[pts]}`);
+  }
+
+  function shoot() {
+    if (!gameOn) startGame();
+    if (!gameOn || shootBtn.disabled) return;
+
+    const pts = randPts();
+    myPts += pts;
+    myScoreEl.textContent = myPts;
+    popEl(myScoreEl);
+    bounceEl(playerL);
+
+    const labels = { 1: 'a free throw 🏀', 2: 'a 2-pointer!', 3: 'a 3-pointer!! 🎉' };
+    showMsg(`🙌 You scored ${labels[pts]}`);
+
+    // Start cooldown
+    shootBtn.disabled = true;
+    cdEnd = Date.now() + COOLDOWN_MS;
+    cancelAnimationFrame(cdRaf);
+    tickCooldown();
+  }
+
+  function tickCooldown() {
+    const left = cdEnd - Date.now();
+    if (left <= 0) {
+      cdFill.style.width = '100%';
+      cdLabel.textContent = 'Ready! 🏀';
+      if (gameOn) shootBtn.disabled = false;
+      return;
+    }
+    const pct = (1 - left / COOLDOWN_MS) * 100;
+    cdFill.style.width = pct + '%';
+    cdLabel.textContent = `Ready in ${(left / 1000).toFixed(1)}s…`;
+    cdRaf = requestAnimationFrame(tickCooldown);
+  }
+
+  function endGame() {
+    clearInterval(clockInterval);
+    clearInterval(cpuInterval);
+    cancelAnimationFrame(cdRaf);
+    gameOn = false;
+    shootBtn.disabled = true;
+    timerEl.textContent = '0';
+
+    let title, msg;
+    if (myPts > cpuPts)      { title = '🏆 You Win!';    msg = '🎉 Amazing! You crushed it!'; }
+    else if (myPts < cpuPts) { title = '😢 CPU Wins';    msg = 'Better luck next time!'; }
+    else                      { title = '🤝 It\'s a Tie!'; msg = 'What a close game!'; }
+
+    document.getElementById('result-title').textContent = title;
+    document.getElementById('result-msg').textContent   = msg;
+    document.getElementById('result-score').textContent = `Your Team ${myPts}  –  ${cpuPts} CPU Team`;
+    overlay.classList.add('show');
+  }
+
+  function restart() {
+    clearInterval(clockInterval);
+    clearInterval(cpuInterval);
+    cancelAnimationFrame(cdRaf);
+
+    myPts = cpuPts = 0;
+    timeLeft = GAME_SECS;
+    gameOn   = false;
+
+    myScoreEl.textContent  = '0';
+    cpuScoreEl.textContent = '0';
+    timerEl.textContent    = GAME_SECS;
+    timerEl.classList.remove('urgent');
+    cdFill.style.width  = '100%';
+    cdLabel.textContent = 'Tap to start!';
+    msgEl.textContent   = '🏀 Press SHOOT to start the game!';
+    msgEl.classList.remove('flash');
+    shootBtn.disabled   = false;
+    overlay.classList.remove('show');
+  }
+
+  function randPts() { return Math.floor(Math.random() * 3) + 1; }
+
+  function showMsg(text) {
+    msgEl.textContent = text;
+    msgEl.classList.remove('flash');
+    void msgEl.offsetWidth;
+    msgEl.classList.add('flash');
+  }
+
+  function popEl(el) {
+    el.classList.remove('pop');
+    void el.offsetWidth;
+    el.classList.add('pop');
+  }
+
+  function bounceEl(el) {
+    el.classList.remove('bounce');
+    void el.offsetWidth;
+    el.classList.add('bounce');
+  }
+</script>
+
+</body>
+</html>
