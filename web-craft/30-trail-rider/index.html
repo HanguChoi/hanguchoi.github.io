@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>Trail Rider</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(180deg, #1b3a1b 0%, #2d5a1b 40%, #4a7c2f 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 80px 24px 60px;
+      min-height: 100vh;
+    }
+
+    h1 { font-size: 1.8rem; color: #e8f5c8; margin-bottom: 8px; text-shadow: 0 1px 4px rgba(0,0,0,0.4); }
+
+    .trail-label {
+      font-size: 0.75rem;
+      color: #a8c870;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 36px;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.92);
+      border-radius: 20px;
+      padding: 28px;
+      margin-bottom: 20px;
+      width: 320px;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+    }
+
+    .big-emoji {
+      font-size: 5rem;
+      line-height: 1;
+      margin-bottom: 8px;
+      display: inline-block;
+      transition: transform 0.2s;
+    }
+    .big-emoji.bounce { animation: bounce 0.45s ease; }
+    @keyframes bounce {
+      0%,100% { transform: translateY(0); }
+      40%     { transform: translateY(-14px); }
+    }
+
+    .speech {
+      font-size: 0.88rem;
+      color: #777;
+      min-height: 1.4em;
+      margin-bottom: 20px;
+    }
+
+    .bar-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #aaa;
+      text-align: left;
+      margin-bottom: 6px;
+    }
+    .bar-track {
+      background: #e8edf2;
+      border-radius: 10px;
+      height: 18px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+    .bar-fill {
+      height: 100%;
+      border-radius: 10px;
+      transition: width 0.5s, background-color 0.5s;
+    }
+
+    button {
+      padding: 12px 28px;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      color: white;
+      transition: transform 0.1s, opacity 0.2s;
+    }
+    button:active { transform: scale(0.95); }
+  .wc-nav { position: fixed; top: 12px; left: 12px; display: flex; gap: 8px; z-index: 1000; }
+  .wc-nav a { background: rgba(0,0,0,0.65); color: white; text-decoration: none; padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-family: Arial, sans-serif; backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.15); }
+  .wc-nav a:hover { background: rgba(0,0,0,0.9); }
+</style>
+</head>
+<body>
+
+<nav class="wc-nav">
+  <a href="/">&#127968; Home</a>
+  <a href="/web-craft/">&#8592; Examples</a>
+</nav>
+
+<h1>🚵 Trail Rider</h1>
+<div class="trail-label">Keep the rider going!</div>
+
+<!-- Rider card -->
+<div class="card">
+  <div class="big-emoji" id="rider-emoji">🚴</div>
+  <div class="speech" id="rider-speech">Crushing it! 💪</div>
+  <div class="bar-label">Stamina</div>
+  <div class="bar-track">
+    <div class="bar-fill" id="stamina-bar"></div>
+  </div>
+  <button onclick="eatSnack()" style="background: #e67e22;">Eat Snack 🍌</button>
+</div>
+
+<!-- Bike card -->
+<div class="card">
+  <div class="big-emoji" id="bike-emoji">🚵</div>
+  <div class="speech" id="bike-speech">Bike feels great! ✨</div>
+  <div class="bar-label">Bike Condition</div>
+  <div class="bar-track">
+    <div class="bar-fill" id="condition-bar"></div>
+  </div>
+  <button onclick="fixBike()" style="background: #27ae60;">Fix Bike 🔧</button>
+</div>
+
+<script>
+  let stamina   = 80;
+  let condition = 80;
+
+  function render() {
+    // --- Stamina bar ---
+    const sBar = document.getElementById('stamina-bar');
+    sBar.style.width = stamina + '%';
+    sBar.style.backgroundColor = stamina > 50 ? '#e67e22' : stamina > 25 ? '#e74c3c' : '#c0392b';
+
+    const riderEmoji  = document.getElementById('rider-emoji');
+    const riderSpeech = document.getElementById('rider-speech');
+    if (stamina > 70) {
+      riderEmoji.textContent  = '🚴';
+      riderSpeech.textContent = 'Crushing it! 💪';
+    } else if (stamina > 40) {
+      riderEmoji.textContent  = '😮';
+      riderSpeech.textContent = 'Getting tired… need a snack!';
+    } else if (stamina > 0) {
+      riderEmoji.textContent  = '🥵';
+      riderSpeech.textContent = 'Running on empty! Feed me! 🍌';
+    } else {
+      riderEmoji.textContent  = '😵';
+      riderSpeech.textContent = 'Totally out of energy… 😵';
+    }
+
+    // --- Condition bar ---
+    const cBar = document.getElementById('condition-bar');
+    cBar.style.width = condition + '%';
+    cBar.style.backgroundColor = condition > 50 ? '#27ae60' : condition > 25 ? '#f39c12' : '#e74c3c';
+
+    const bikeEmoji  = document.getElementById('bike-emoji');
+    const bikeSpeech = document.getElementById('bike-speech');
+    if (condition > 70) {
+      bikeEmoji.textContent  = '🚵';
+      bikeSpeech.textContent = 'Bike feels great! ✨';
+    } else if (condition > 40) {
+      bikeEmoji.textContent  = '😬';
+      bikeSpeech.textContent = 'Chain is rattling… fix it soon!';
+    } else if (condition > 0) {
+      bikeEmoji.textContent  = '🫨';
+      bikeSpeech.textContent = 'Flat tire incoming! 🔧';
+    } else {
+      bikeEmoji.textContent  = '💀';
+      bikeSpeech.textContent = 'Bike is totally wrecked… 😭';
+    }
+  }
+
+  function eatSnack() {
+    stamina = Math.min(100, stamina + 30);
+    bounce('rider-emoji');
+    render();
+  }
+
+  function fixBike() {
+    condition = Math.min(100, condition + 30);
+    bounce('bike-emoji');
+    render();
+  }
+
+  function bounce(id) {
+    const el = document.getElementById(id);
+    el.classList.remove('bounce');
+    void el.offsetWidth;
+    el.classList.add('bounce');
+  }
+
+  // Stamina drains slower, condition drains faster (rough trail!)
+  setInterval(function() {
+    stamina   = Math.max(0, stamina   - 0.8);
+    condition = Math.max(0, condition - 1.2);
+    render();
+  }, 200);
+
+  render();
+</script>
+
+</body>
+</html>
